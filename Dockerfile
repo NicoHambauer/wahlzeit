@@ -1,5 +1,5 @@
 #########################################################
-# First stage: image to build the application           #
+# First stage: image to build the application       Test#
 #########################################################
 FROM adoptopenjdk/openjdk11-openj9:alpine-slim as builder
 
