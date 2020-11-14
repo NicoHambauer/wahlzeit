@@ -107,10 +107,10 @@ public class Photo extends DataObject {
 	/**
 	 *
 	 */
-	public Location location;
+	public Location location = new Location(); //standart coordinates (0,0,0) since there is no UI for coordinate input
 	
 	/**
-	 * 
+	 * @methodtype constructor
 	 */
 	public Photo() {
 		id = PhotoId.getNextId();
