@@ -12,16 +12,8 @@ public class Location {
         this.coordinate = new Coordinate(x, y, z);
     }
 
-    public double getX() {
-        return coordinate.getX();
-    }
-
-    public double getY() {
-        return coordinate.getY();
-    }
-
-    public double getZ() {
-        return coordinate.getZ();
+    public Coordinate getCoordinate(){
+        return this.coordinate;
     }
 
     @Override

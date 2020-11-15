@@ -107,7 +107,7 @@ public class Photo extends DataObject {
 	/**
 	 *
 	 */
-	public Location location;
+	public Location location = new Location(); // standart location with coordinates (0,0,0) bc wahlzeit has no ui for inpot of coordiantes
 	
 	/**
 	 * @methodtype constructor
@@ -171,11 +171,16 @@ public class Photo extends DataObject {
 		maxPhotoSize = PhotoSize.getFromWidthHeight(width, height);
 		//if the value is SQL NULL, 0 is returned by rset.getDouble, in general wahlzeit has no ui input for coordinates,
 		//so it will always return 0, therefore new Location(); could also be used, as long as it has no ui input for it
-		location = new Location(
-				rset.getDouble("coordinate_x"),
-				rset.getDouble("coordinate_y"),
-				rset.getDouble("coordinate_z")
-		);
+		double coordinate_x = rset.getDouble("coordinate_x");
+		double coordinate_y = rset.getDouble("coordinate_y");
+		double coordinate_z = rset.getDouble("coordinate_z");
+		if(location == null){
+			location = new Location(coordinate_x, coordinate_y, coordinate_z);
+		} else {
+			location.getCoordinate().setX(coordinate_x);
+			location.getCoordinate().setY(coordinate_y);
+			location.getCoordinate().setZ(coordinate_z);
+		}
 	}
 	
 	/**
@@ -196,9 +201,9 @@ public class Photo extends DataObject {
 		rset.updateInt("praise_sum", praiseSum);
 		rset.updateInt("no_votes", noVotes);
 		rset.updateLong("creation_time", creationTime);
-		rset.updateDouble("coordinate_x", location.getX());
-		rset.updateDouble("coordinate_y", location.getY());
-		rset.updateDouble("coordinate_z", location.getZ());
+		rset.updateDouble("coordinate_x", location.getCoordinate().getX());
+		rset.updateDouble("coordinate_y", location.getCoordinate().getY());
+		rset.updateDouble("coordinate_z", location.getCoordinate().getZ());
 	}
 
 	/**
