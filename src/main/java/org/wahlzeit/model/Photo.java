@@ -107,7 +107,7 @@ public class Photo extends DataObject {
 	/**
 	 *
 	 */
-	public Location location = new Location(); //standart coordinates (0,0,0) since there is no UI for coordinate input
+	public Location location;
 	
 	/**
 	 * @methodtype constructor
@@ -169,6 +169,13 @@ public class Photo extends DataObject {
 		creationTime = rset.getLong("creation_time");
 
 		maxPhotoSize = PhotoSize.getFromWidthHeight(width, height);
+		//if the value is SQL NULL, 0 is returned by rset.getDouble, in general wahlzeit has no ui input for coordinates,
+		//so it will always return 0, therefore new Location(); could also be used, as long as it has no ui input for it
+		location = new Location(
+				rset.getDouble("coordinate_x"),
+				rset.getDouble("coordinate_y"),
+				rset.getDouble("coordinate_z")
+		);
 	}
 	
 	/**
@@ -188,7 +195,10 @@ public class Photo extends DataObject {
 		rset.updateInt("status", status.asInt());
 		rset.updateInt("praise_sum", praiseSum);
 		rset.updateInt("no_votes", noVotes);
-		rset.updateLong("creation_time", creationTime);		
+		rset.updateLong("creation_time", creationTime);
+		rset.updateDouble("coordinate_x", location.getX());
+		rset.updateDouble("coordinate_y", location.getY());
+		rset.updateDouble("coordinate_z", location.getZ());
 	}
 
 	/**

@@ -26,12 +26,34 @@ public class Coordinate {
         this.z = z;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
     public double getDistance(Coordinate coordinate){
         double x_vec = coordinate.x - this.x;
         double y_vec = coordinate.y - this.y;
         double z_vec = coordinate.z - this.z;
 
         return Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
+    }
+
+
+    @Override
+    public boolean equals(Object other_object) {
+        if(!(other_object instanceof Coordinate) || !(this instanceof Coordinate)) {
+            return false;
+        }
+        Coordinate other_coordinate = (Coordinate) other_object;
+        return this.isEqual(other_coordinate);
     }
 
     public boolean isEqual(Coordinate coordinate){

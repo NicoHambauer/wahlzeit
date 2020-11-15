@@ -12,6 +12,18 @@ public class Location {
         this.coordinate = new Coordinate(x, y, z);
     }
 
+    public double getX() {
+        return coordinate.getX();
+    }
+
+    public double getY() {
+        return coordinate.getY();
+    }
+
+    public double getZ() {
+        return coordinate.getZ();
+    }
+
     @Override
     public boolean equals(Object other_object) {
         //Location extends Object by standart in java
@@ -21,5 +33,7 @@ public class Location {
         Location other_location = (Location) other_object;
         return this.coordinate.isEqual(other_location.coordinate);
     }
+
+
 
 }
