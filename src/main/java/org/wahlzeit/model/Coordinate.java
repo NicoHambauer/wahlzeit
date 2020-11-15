@@ -1,8 +1,11 @@
 package org.wahlzeit.model;
 
+import java.math.BigDecimal;
+
 public class Coordinate {
 
     private double x, y, z;
+    private final int SCALE = 6; //compares Coordinates by amount of SCALE positions after decimal point
 
     /**
      *
@@ -33,11 +36,14 @@ public class Coordinate {
 
     public boolean isEqual(Coordinate coordinate){
         //carefully compares double coordinates since double is not exakt
-        int x_diff = (int) Math.floor(Math.abs(coordinate.x - this.x));
-        int y_diff = (int) Math.floor(Math.abs(coordinate.y - this.y));
-        int z_diff = (int) Math.floor(Math.abs(coordinate.z - this.z));
-        //Big decimal??
-        return x_diff == 0 && y_diff == 0 && z_diff == 0;
+        BigDecimal t_x = (new BigDecimal(this.x)).setScale(SCALE);
+        BigDecimal c_x = (new BigDecimal(coordinate.x)).setScale(SCALE);
+        BigDecimal t_y = (new BigDecimal(this.y)).setScale(SCALE);
+        BigDecimal c_y = (new BigDecimal(coordinate.y)).setScale(SCALE);
+        BigDecimal t_z = (new BigDecimal(this.z)).setScale(SCALE);
+        BigDecimal c_z = (new BigDecimal(coordinate.z)).setScale(SCALE);
+
+        return t_x.compareTo(c_x) == 0 && t_y.compareTo(c_y) == 0 && t_z.compareTo(c_z) == 0;
     }
 
 
