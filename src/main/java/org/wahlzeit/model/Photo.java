@@ -169,18 +169,7 @@ public class Photo extends DataObject {
 		creationTime = rset.getLong("creation_time");
 
 		maxPhotoSize = PhotoSize.getFromWidthHeight(width, height);
-		//if the value is SQL NULL, 0 is returned by rset.getDouble, in general wahlzeit has no ui input for coordinates,
-		//so it will always return 0, therefore new Location(); could also be used, as long as it has no ui input for it
-		double coordinate_x = rset.getDouble("coordinate_x");
-		double coordinate_y = rset.getDouble("coordinate_y");
-		double coordinate_z = rset.getDouble("coordinate_z");
-		if(location == null){
-			location = new Location(coordinate_x, coordinate_y, coordinate_z);
-		} else {
-			location.getCoordinate().setX(coordinate_x);
-			location.getCoordinate().setY(coordinate_y);
-			location.getCoordinate().setZ(coordinate_z);
-		}
+		this.location.readFrom(rset);
 	}
 	
 	/**
@@ -201,9 +190,7 @@ public class Photo extends DataObject {
 		rset.updateInt("praise_sum", praiseSum);
 		rset.updateInt("no_votes", noVotes);
 		rset.updateLong("creation_time", creationTime);
-		rset.updateDouble("coordinate_x", location.getCoordinate().getX());
-		rset.updateDouble("coordinate_y", location.getCoordinate().getY());
-		rset.updateDouble("coordinate_z", location.getCoordinate().getZ());
+		this.location.writeOn(rset);
 	}
 
 	/**
@@ -496,6 +483,14 @@ public class Photo extends DataObject {
 	 */
 	public long getCreationTime() {
 		return creationTime;
+	}
+
+	@Override
+	public boolean isDirty(){
+		boolean selfDirty = this.writeCount != 0;
+		boolean locationInstanceDirty = this.location == null ? false : this.location.isDirty();
+
+		return selfDirty || locationInstanceDirty;
 	}
 	
 }

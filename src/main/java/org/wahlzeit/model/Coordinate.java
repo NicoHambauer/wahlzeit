@@ -1,8 +1,14 @@
 package org.wahlzeit.model;
 
-import java.math.BigDecimal;
+import org.wahlzeit.services.DataObject;
 
-public class Coordinate {
+import javax.xml.transform.Result;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Coordinate extends DataObject {
 
     private double x, y, z;
     private final int SCALE = 6; //compares Coordinates by amount of SCALE positions after decimal point
@@ -58,6 +64,34 @@ public class Coordinate {
         return Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
     }
 
+    public void writeOn(ResultSet rset) throws SQLException {
+        rset.updateDouble("coordinate_x", getX());
+        rset.updateDouble("coordinate_y", getY());
+        rset.updateDouble("coordinate_z", getZ());
+    }
+
+    @Override
+    public void writeId(PreparedStatement stmt, int pos) throws SQLException {
+
+    }
+
+    public void readFrom(ResultSet rset) throws SQLException {
+        //if the value is SQL NULL, 0 is returned by rset.getDouble, in general wahlzeit has no ui input for coordinates,
+        //so it will always return 0, therefore new Location(); could also be used, as long as it has no ui input for it
+        double coordinate_x = rset.getDouble("coordinate_x");
+        double coordinate_y = rset.getDouble("coordinate_y");
+        double coordinate_z = rset.getDouble("coordinate_z");
+
+        setX(coordinate_x);
+        setY(coordinate_y);
+        setZ(coordinate_z);
+
+    }
+
+    @Override
+    public String getIdAsString() {
+        return null;
+    }
 
     @Override
     public boolean equals(Object other_object) {
@@ -78,6 +112,11 @@ public class Coordinate {
         BigDecimal c_z = (new BigDecimal(coordinate.z)).setScale(SCALE);
 
         return t_x.compareTo(c_x) == 0 && t_y.compareTo(c_y) == 0 && t_z.compareTo(c_z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (this.x + this.y + this.z);
     }
 
 
