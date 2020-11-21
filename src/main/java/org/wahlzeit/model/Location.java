@@ -12,10 +12,12 @@ public class Location extends DataObject {
 
     public Location(){
         this.coordinate = new Coordinate();//standart coordinates (0,0,0) since there is no UI for coordinate input
+        incWriteCount();
     }
 
     public Location(double x, double y, double z){
         this.coordinate = new Coordinate(x, y, z);
+        incWriteCount();
     }
 
     public Coordinate getCoordinate(){

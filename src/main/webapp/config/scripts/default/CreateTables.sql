@@ -32,7 +32,11 @@ CREATE TABLE photos (
 	creation_time bigint,
 	coordinate_x double precision,
 	coordinate_y double precision,
-	coordinate_z double precision
+	coordinate_z double precision,
+    rooms integer,
+    bathrooms integer,
+    year_built integer,
+    renovated boolean
 );
 
 CREATE TABLE tags (

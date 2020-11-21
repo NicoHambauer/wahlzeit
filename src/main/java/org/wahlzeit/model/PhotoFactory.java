@@ -39,8 +39,8 @@ public class PhotoFactory {
 	 */
 	public static synchronized PhotoFactory getInstance() {
 		if (instance == null) {
-			SysLog.logSysInfo("setting generic PhotoFactory");
-			setInstance(new PhotoFactory());
+			SysLog.logSysInfo("setting specific RealEstatePhotoFactory");
+			setInstance(new RealEstatePhotoFactory());
 		}
 		
 		return instance;
@@ -75,7 +75,7 @@ public class PhotoFactory {
 	 * @methodtype factory
 	 */
 	public Photo createPhoto() {
-		return new Photo();
+		return new Photo();//does not need to be changed to RealEstatePhotoFactory since the method is overwritten
 	}
 	
 	/**

@@ -34,7 +34,7 @@ public class ServiceMain extends ModelMain {
 	/**
 	 * 
 	 */
-	protected static ServiceMain instance = new ServiceMain();
+	protected static ServiceMain instance = new RealEstateMain();
 
 	/**
 	 * 
