@@ -6,19 +6,19 @@ import org.wahlzeit.services.DataObject;
 
 import static org.junit.Assert.*;
 
-public class CoordinateTest {
+public class CartesianCoordinateTest {
 
-    private Coordinate co;
-    private Coordinate other_co;
+    private CartesianCoordinate co;
+    private CartesianCoordinate other_co;
     private double max_diff = 0.00001;
 
     @Before //each
     public void init() {
-        co = new Coordinate();
+        co = new CartesianCoordinate();
     }
     @Test
     public void testSuperClass(){
-        assertTrue(Coordinate.class.getSuperclass() == DataObject.class);
+        assertTrue(CartesianCoordinate.class.getSuperclass() == DataObject.class);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class CoordinateTest {
     @Test
     public void testConstructor(){
         //arrange
-        co = new Coordinate(10.0, 10.0, 10.0);
+        co = new CartesianCoordinate(10.0, 10.0, 10.0);
         //act
         double diff_x = Math.abs(co.getX() - 10.0);
         double diff_y = Math.abs(co.getY() - 10.0);
@@ -76,7 +76,7 @@ public class CoordinateTest {
     @Test
     public void testDistance(){
         //arrange
-        other_co = new Coordinate(3.0, 3.0, 1.5);
+        other_co = new CartesianCoordinate(3.0, 3.0, 1.5);
         //act
         double distance = co.getDistance(other_co);
         //assert
@@ -87,7 +87,7 @@ public class CoordinateTest {
     @Test
     public void testEqualsSimple(){
         //arrange
-        other_co = new Coordinate();
+        other_co = new CartesianCoordinate();
         //act
         //assert
         assertTrue(co.equals(other_co));
@@ -97,7 +97,7 @@ public class CoordinateTest {
     @Test
     public void testEquals(){
         //arrange
-        other_co = new Coordinate(1.0,1.0,1.0);
+        other_co = new CartesianCoordinate(1.0,1.0,1.0);
         //act
         co.setX(1.0);
         co.setY(1.0);
@@ -110,7 +110,7 @@ public class CoordinateTest {
     @Test
     public void testHashCode(){
         //arrange
-        other_co = new Coordinate(1.0,1.0,1.0);
+        other_co = new CartesianCoordinate(1.0,1.0,1.0);
         //act
         co.setX(1.0);
         co.setY(1.0);

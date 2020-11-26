@@ -8,24 +8,24 @@ import java.sql.SQLException;
 
 public class Location extends DataObject {
 
-    public Coordinate coordinate;
+    public CartesianCoordinate cartesianCoordinate;
 
     public Location(){
-        this.coordinate = new Coordinate();//standart coordinates (0,0,0) since there is no UI for coordinate input
+        this.cartesianCoordinate = new CartesianCoordinate();//standart coordinates (0,0,0) since there is no UI for coordinate input
         incWriteCount();
     }
 
     public Location(double x, double y, double z){
-        this.coordinate = new Coordinate(x, y, z);
+        this.cartesianCoordinate = new CartesianCoordinate(x, y, z);
         incWriteCount();
     }
 
-    public Coordinate getCoordinate(){
-        return this.coordinate;
+    public CartesianCoordinate getCoordinate(){
+        return this.cartesianCoordinate;
     }
 
     public void writeOn(ResultSet rset) throws SQLException {
-        this.coordinate.writeOn(rset);
+        this.cartesianCoordinate.writeOn(rset);
     }
 
     @Override
@@ -34,13 +34,13 @@ public class Location extends DataObject {
     }
 
     public void readFrom(ResultSet rset) throws SQLException {
-        this.coordinate.readFrom(rset);
+        this.cartesianCoordinate.readFrom(rset);
     }
 
     @Override
     public boolean isDirty(){
         boolean selfDirty = this.writeCount != 0;
-        boolean coordinateDirty = this.coordinate.isDirty();
+        boolean coordinateDirty = this.cartesianCoordinate.isDirty();
 
         return selfDirty || coordinateDirty;
     }
@@ -57,11 +57,11 @@ public class Location extends DataObject {
             return false;
         }
         Location other_location = (Location) other_object;
-        return this.coordinate.isEqual(other_location.coordinate);
+        return this.cartesianCoordinate.isEqual(other_location.cartesianCoordinate);
     }
 
     @Override
     public int hashCode() {
-        return this.coordinate.hashCode();
+        return this.cartesianCoordinate.hashCode();
     }
 }

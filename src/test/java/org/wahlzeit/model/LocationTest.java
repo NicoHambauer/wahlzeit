@@ -19,13 +19,13 @@ public class LocationTest {
 
     @Test
     public void testSuperClass(){
-        assertTrue(Coordinate.class.getSuperclass() == DataObject.class);
+        assertTrue(CartesianCoordinate.class.getSuperclass() == DataObject.class);
     }
 
     @Test
     public void testLocationCoordinateNotNull() {
         //arrange
-        Coordinate c = loc.getCoordinate();
+        CartesianCoordinate c = loc.getCoordinate();
         //act
         //assert
         assertNotNull(c);
