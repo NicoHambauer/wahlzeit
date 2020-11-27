@@ -78,7 +78,7 @@ public class CartesianCoordinateTest {
         //arrange
         other_co = new CartesianCoordinate(3.0, 3.0, 1.5);
         //act
-        double distance = co.getDistance(other_co);
+        double distance = co.getCartesianDistance(other_co);
         //assert
         assertTrue(Math.abs(distance - 4.5) <= max_diff);
 

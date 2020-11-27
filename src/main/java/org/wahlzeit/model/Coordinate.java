@@ -2,6 +2,8 @@ package org.wahlzeit.model;
 
 public interface Coordinate {
 
+    final int SCALE = 6; //compares Coordinates by amount of SCALE positions after decimal point
+
     /**
      *
      * @methodtype Query Method Interpretation Method
