@@ -1,6 +1,6 @@
 package org.wahlzeit.model;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.services.DataObject;
 
@@ -8,9 +8,11 @@ import static org.junit.Assert.*;
 
 public class RealEstatePhotoTest {
 
-    @BeforeClass
-    public static void init() {
-        PhotoFactory.initialize();
+    private Photo photo;
+
+    @Before //each
+    public void init() {
+        this.photo = new RealEstatePhoto();
     }
 
     @Test
@@ -19,8 +21,7 @@ public class RealEstatePhotoTest {
     }
     @Test
     public void testCreatePhoto() {
-        //arrange
-        Photo photo = PhotoFactory.getInstance().createPhoto();
+        //arrange see init
         //act
         //assert
         assertNotNull(photo);
@@ -28,8 +29,7 @@ public class RealEstatePhotoTest {
 
     @Test
     public void testClassOfPhoto() {
-        //arrange
-        Photo photo = PhotoFactory.getInstance().createPhoto();
+        //arrange see init
         //act
         //assert
         assertEquals(RealEstatePhoto.class, photo.getClass());
@@ -38,9 +38,9 @@ public class RealEstatePhotoTest {
     @Test
     public void testWriteCount(){
         //arrange
-        Photo photo1 = PhotoFactory.getInstance().createPhoto();
+        Photo photo1 = photo; //see init
         PhotoId id = new PhotoId(10);
-        Photo photo2 = PhotoFactory.getInstance().createPhoto(id);
+        Photo photo2 = new RealEstatePhoto(id);
         //act
         //assert
         assertTrue(photo1.isDirty());
@@ -49,22 +49,21 @@ public class RealEstatePhotoTest {
 
     @Test
     public void testAttributes() {
-        //arrange
-        Photo photo = PhotoFactory.getInstance().createPhoto();
+        //arrange see init
         //act
         RealEstatePhoto re_photo = (RealEstatePhoto) photo;
         //assert
         assertEquals(5, re_photo.getRooms());
         assertEquals(2, re_photo.getBathrooms());
         assertEquals(1996, re_photo.getYear_built());
-        assertEquals(false, re_photo.isRenovated());
+        assertFalse(re_photo.isRenovated());
     }
 
     @Test
     public void testBooleanQuery() {
         //arrange
-        Photo photo1 = PhotoFactory.getInstance().createPhoto();
-        Photo photo2 = PhotoFactory.getInstance().createPhoto();
+        Photo photo1 = photo;
+        Photo photo2 = new RealEstatePhoto();
         //act
         RealEstatePhoto re_photo1 = (RealEstatePhoto) photo1;
         RealEstatePhoto re_photo2 = (RealEstatePhoto) photo2;
@@ -75,8 +74,7 @@ public class RealEstatePhotoTest {
 
     @Test
     public void testSetter() {
-        //arrange
-        Photo photo = PhotoFactory.getInstance().createPhoto();
+        //arrange see init
         //act
         RealEstatePhoto re_photo = (RealEstatePhoto) photo;
         re_photo.setYear_built(2020);
@@ -87,6 +85,6 @@ public class RealEstatePhotoTest {
         assertEquals(2020, re_photo.getYear_built());
         assertEquals(10, re_photo.getBathrooms());
         assertEquals(20, re_photo.getRooms());
-        assertEquals(true, re_photo.isRenovated());
+        assertTrue(re_photo.isRenovated());
     }
 }
