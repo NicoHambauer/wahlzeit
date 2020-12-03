@@ -3,6 +3,7 @@ package org.wahlzeit.model;
 import org.wahlzeit.services.DataObject;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -144,12 +145,12 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
         CartesianCoordinate other_cartesianCoordinate = other_coordinate.asCartesianCoordinate();
 
         //carefully compares double coordinates since double is not exakt
-        BigDecimal t_x = (new BigDecimal(this.getX())).setScale(SCALE);
-        BigDecimal c_x = (new BigDecimal(other_cartesianCoordinate.getX())).setScale(SCALE);
-        BigDecimal t_y = (new BigDecimal(this.getY())).setScale(SCALE);
-        BigDecimal c_y = (new BigDecimal(other_cartesianCoordinate.getY())).setScale(SCALE);
-        BigDecimal t_z = (new BigDecimal(this.getZ())).setScale(SCALE);
-        BigDecimal c_z = (new BigDecimal(other_cartesianCoordinate.getZ())).setScale(SCALE);
+        BigDecimal t_x = (new BigDecimal(this.getX())).setScale(SCALE, RoundingMode.DOWN);
+        BigDecimal c_x = (new BigDecimal(other_cartesianCoordinate.getX())).setScale(SCALE, RoundingMode.DOWN);
+        BigDecimal t_y = (new BigDecimal(this.getY())).setScale(SCALE, RoundingMode.DOWN);
+        BigDecimal c_y = (new BigDecimal(other_cartesianCoordinate.getY())).setScale(SCALE, RoundingMode.DOWN);
+        BigDecimal t_z = (new BigDecimal(this.getZ())).setScale(SCALE, RoundingMode.DOWN);
+        BigDecimal c_z = (new BigDecimal(other_cartesianCoordinate.getZ())).setScale(SCALE, RoundingMode.DOWN);
 
         return t_x.compareTo(c_x) == 0 && t_y.compareTo(c_y) == 0 && t_z.compareTo(c_z) == 0;
     }

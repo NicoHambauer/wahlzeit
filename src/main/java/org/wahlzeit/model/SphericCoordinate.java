@@ -14,6 +14,7 @@ public class SphericCoordinate extends DataObject implements Coordinate{
     /**
      * Physical Representation of SphericCoordinate
      * With theta as polar angle and phi as horizontal/"azimut" angle
+     * in radians
      * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Definition
      *
      * @methodtype constructor
@@ -27,11 +28,14 @@ public class SphericCoordinate extends DataObject implements Coordinate{
     /**
      * Physical Representation of SphericCoordinate
      * With theta as polar angle and phi as horizontal/"azimut" angle
+     * in radians
      * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Definition
      *
      * @methodtype constructor
      */
     public SphericCoordinate(double radius, double theta, double phi){
+        if(theta > Math.PI) throw new IllegalArgumentException("Theta must be between 0 and PI");
+        if(phi > Math.PI * 2) throw new IllegalArgumentException("Theta must be between 0 and 2 * PI");
         this.radius = radius;
         this.theta = theta;
         this.phi = phi;
@@ -106,7 +110,9 @@ public class SphericCoordinate extends DataObject implements Coordinate{
      */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        double x = this.getRadius() * Math.sin(this.getTheta()) * Math.cos(this.getPhi());
+        double x_sin = Math.sin(this.getTheta());
+        double x_cos = Math.cos(this.getPhi());
+        double x = this.getRadius() * x_sin * x_cos;
         double y = this.getRadius() * Math.sin(this.getTheta()) * Math.sin(this.getPhi());
         double z = this.getRadius() * Math.cos(this.getTheta());
         return new CartesianCoordinate(x, y, z);
@@ -144,16 +150,10 @@ public class SphericCoordinate extends DataObject implements Coordinate{
 
     @Override
     public boolean isEqual(Coordinate other_Coordinate) {
-        SphericCoordinate other_spheric_coordinate = other_Coordinate.asSphericCoordinate();
-        //carefully compares double coordinates since double is not exakt
-        BigDecimal t_radius = (new BigDecimal(this.getRadius())).setScale(SCALE);
-        BigDecimal other_radius = (new BigDecimal(other_spheric_coordinate.getRadius())).setScale(SCALE);
-        BigDecimal t_theta = (new BigDecimal(this.getTheta() % 360.0)).setScale(SCALE);
-        BigDecimal other_theta = (new BigDecimal(other_spheric_coordinate.getTheta() % 360.0)).setScale(SCALE);
-        BigDecimal t_phi = (new BigDecimal(this.getPhi() % 360.0)).setScale(SCALE);
-        BigDecimal other_phi = (new BigDecimal(other_spheric_coordinate.getPhi() % 360.0)).setScale(SCALE);
+        CartesianCoordinate this_cartesian_coordinate = this.asCartesianCoordinate();
+        CartesianCoordinate other_cartesian_coordinate = other_Coordinate.asCartesianCoordinate();
 
-        return t_radius.compareTo(other_radius) == 0 && t_theta.compareTo(other_theta) == 0 && t_phi.compareTo(other_phi) == 0;
+        return this_cartesian_coordinate.isEqual(other_cartesian_coordinate);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class SphericCoordinate extends DataObject implements Coordinate{
      * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
      */
     private double doGetMathPhi(double theta){
-        return 90.0 - theta;
+        return Math.toRadians(90.0) - theta;
     }
 
     /**
