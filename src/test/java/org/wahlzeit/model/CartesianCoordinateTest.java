@@ -19,7 +19,7 @@ public class CartesianCoordinateTest {
     @Test
     public void testSuperClass(){
 
-        assertTrue(CartesianCoordinate.class.getSuperclass() == DataObject.class);
+        assertTrue(CartesianCoordinate.class.getSuperclass() == AbstractCoordinate.class);
     }
 
     @Test

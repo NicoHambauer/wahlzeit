@@ -18,11 +18,6 @@ public class LocationTest {
     }
 
     @Test
-    public void testSuperClass(){
-        assertTrue(CartesianCoordinate.class.getSuperclass() == DataObject.class);
-    }
-
-    @Test
     public void testLocationCoordinateNotNull() {
         //arrange
         CartesianCoordinate c = loc.getCoordinate();

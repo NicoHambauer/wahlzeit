@@ -18,7 +18,7 @@ public class SphericCoordinateTest {
     }
     @Test
     public void testSuperClass(){
-        assertTrue(SphericCoordinate.class.getSuperclass() == DataObject.class);
+        assertTrue(SphericCoordinate.class.getSuperclass() == AbstractCoordinate.class);
     }
 
     @Test

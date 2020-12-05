@@ -17,7 +17,7 @@ public class RealEstatePhotoTest {
 
     @Test
     public void testSuperClass(){
-        assertTrue(CartesianCoordinate.class.getSuperclass() == DataObject.class);
+        assertTrue(RealEstatePhoto.class.getSuperclass() == Photo.class);
     }
     @Test
     public void testCreatePhoto() {
