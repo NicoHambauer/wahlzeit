@@ -29,17 +29,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
     public double getCentralAngle(Coordinate other_Coordinate) {
         SphericCoordinate this_spheric_coordinate = this.asSphericCoordinate();
         SphericCoordinate other_spheric_coordinate = other_Coordinate.asSphericCoordinate();//other_spheric_coordinate
-        double bigPhi1 = doGetMathPhi(this_spheric_coordinate.getTheta());
-        double bigPhi2 = doGetMathPhi(other_spheric_coordinate.getTheta());
-        double deltaLamda = doGetMathDeltaLambda(this_spheric_coordinate.getPhi(), other_spheric_coordinate.getPhi());
-
-        double pow1 = Math.pow( Math.cos(bigPhi2) * Math.sin(deltaLamda), 2);
-        double pow2 = Math.pow( (Math.cos( bigPhi1) * Math.sin(bigPhi2) - (Math.sin(bigPhi1) * Math.cos(bigPhi2) * Math.cos(deltaLamda))), 2);
-
-        double numerator = Math.sqrt( pow1 + pow2);
-        double denominator = (Math.sin(bigPhi1) * Math.sin(bigPhi2)) + (Math.cos(bigPhi1) * Math.cos(bigPhi2) * Math.cos(deltaLamda));
-
-        return Math.atan( numerator / denominator);
+        return this_spheric_coordinate.doGetCentralAngle(other_spheric_coordinate);
     }
 
     @Override
@@ -67,19 +57,4 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
         return null;
     }
 
-    /**
-     * @return Phi, the mathimaticl complementary of theta or more specific the geographic Latitude
-     * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
-     */
-    private double doGetMathPhi(double theta){
-        return Math.toRadians(90.0) - theta;
-    }
-
-    /**
-     * @return Lamda the mathimaticl complementary of phi or more specific the geographic Longitude
-     * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
-     */
-    private double doGetMathDeltaLambda(double phi1, double phi2){
-        return Math.abs(phi2 - phi1);
-    }
 }
