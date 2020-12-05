@@ -8,10 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CartesianCoordinate extends DataObject implements Coordinate {
+public class CartesianCoordinate extends AbstractCoordinate {
 
     private double x, y, z;
-
 
     /**
      *
@@ -93,12 +92,6 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
         return this;
     }
 
-    @Override
-    public double getCartesianDistance(Coordinate other_Coordinate) {
-        CartesianCoordinate other_cartesianCoordinate = other_Coordinate.asCartesianCoordinate();
-        return this.doGetDistance(other_cartesianCoordinate);
-    }
-
     /**
      * @return Physical Representation of SphericCoordinate
      */
@@ -114,14 +107,7 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
         return new SphericCoordinate(r, theta, phi);
     }
 
-    @Override
-    public double getCentralAngle(Coordinate other_Coordinate) {
-        SphericCoordinate this_spheric_Coordinate = this.asSphericCoordinate();
-        SphericCoordinate other_spheric_Coordinate = other_Coordinate.asSphericCoordinate();
-        return this_spheric_Coordinate.getCentralAngle(other_spheric_Coordinate);
-    }
-
-    private double doGetDistance(CartesianCoordinate cartesianCoordinate){
+    protected double doGetDistance(CartesianCoordinate cartesianCoordinate){
         if (cartesianCoordinate == null) throw new IllegalArgumentException("Coordinate to get Distance to is null");
 
         double x_vec = cartesianCoordinate.getX() - this.getX();
@@ -131,19 +117,7 @@ public class CartesianCoordinate extends DataObject implements Coordinate {
         return Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
     }
 
-    @Override
-    public boolean equals(Object other_object) {
-        if(!(Coordinate.class.isAssignableFrom(other_object.getClass())) || !(Coordinate.class.isAssignableFrom(this.getClass())) ) {
-            return false;
-        }
-        Coordinate other_Coordinate = (Coordinate) other_object;
-        return this.isEqual(other_Coordinate);
-    }
-
-    @Override
-    public boolean isEqual(Coordinate other_coordinate){
-        CartesianCoordinate other_cartesianCoordinate = other_coordinate.asCartesianCoordinate();
-
+    public boolean doIsEqual(CartesianCoordinate other_cartesianCoordinate){
         //carefully compares double coordinates since double is not exakt
         BigDecimal t_x = (new BigDecimal(this.getX())).setScale(SCALE, RoundingMode.DOWN);
         BigDecimal c_x = (new BigDecimal(other_cartesianCoordinate.getX())).setScale(SCALE, RoundingMode.DOWN);

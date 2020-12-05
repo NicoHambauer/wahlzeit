@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SphericCoordinate extends DataObject implements Coordinate{
+public class SphericCoordinate extends AbstractCoordinate{
 
     private double radius, theta, phi;
 
@@ -119,50 +119,8 @@ public class SphericCoordinate extends DataObject implements Coordinate{
     }
 
     @Override
-    public double getCartesianDistance(Coordinate other_Coordinate) {
-        CartesianCoordinate this_cartesian_coordinate = this.asCartesianCoordinate();
-        CartesianCoordinate other_cartesian_coordinate = other_Coordinate.asCartesianCoordinate();
-
-        return this_cartesian_coordinate.getCartesianDistance(other_cartesian_coordinate);
-    }
-
-    @Override
     public SphericCoordinate asSphericCoordinate() {
         return this;
-    }
-
-    @Override
-    public double getCentralAngle(Coordinate other_Coordinate) {
-        SphericCoordinate other_spheric_coordinate = other_Coordinate.asSphericCoordinate();//other_spheric_coordinate
-
-        double bigPhi1 = this.doGetMathPhi(this.getTheta());
-        double bigPhi2 = doGetMathPhi(other_spheric_coordinate.getTheta());
-        double deltaLamda = doGetMathDeltaLambda(this.getPhi(), other_spheric_coordinate.getPhi());
-
-        double pow1 = Math.pow( cos(bigPhi2) * sin(deltaLamda), 2);
-        double pow2 = Math.pow( (cos( bigPhi1) * sin(bigPhi2) - (sin(bigPhi1) * cos(bigPhi2) * cos(deltaLamda))), 2);
-
-        double numerator = sqrt( pow1 + pow2);
-        double denominator = (sin(bigPhi1) * sin(bigPhi2)) + (cos(bigPhi1) * cos(bigPhi2) * cos(deltaLamda));
-
-        return Math.atan( numerator / denominator);
-    }
-
-    @Override
-    public boolean isEqual(Coordinate other_Coordinate) {
-        CartesianCoordinate this_cartesian_coordinate = this.asCartesianCoordinate();
-        CartesianCoordinate other_cartesian_coordinate = other_Coordinate.asCartesianCoordinate();
-
-        return this_cartesian_coordinate.isEqual(other_cartesian_coordinate);
-    }
-
-    @Override
-    public boolean equals(Object other_object) {
-        if(!(Coordinate.class.isAssignableFrom(other_object.getClass())) || !(Coordinate.class.isAssignableFrom(this.getClass())) ) {
-            return false;
-        }
-        Coordinate other_Coordinate = (Coordinate) other_object;
-        return this.isEqual(other_Coordinate);
     }
 
     @Override
@@ -175,40 +133,6 @@ public class SphericCoordinate extends DataObject implements Coordinate{
         return null;
     }
 
-    /**
-     * @return Phi, the mathimaticl complementary of theta or more specific the geographic Latitude
-     * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
-     */
-    private double doGetMathPhi(double theta){
-        return Math.toRadians(90.0) - theta;
-    }
 
-    /**
-     * @return Lamda the mathimaticl complementary of phi or more specific the geographic Longitude
-     * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
-     */
-    private double doGetMathDeltaLambda(double phi1, double phi2){
-        return Math.abs(phi2 - phi1);
-    }
 
-    /**
-     * makes code more readable
-     */
-    private double sin(double a){
-        return Math.sin(a);
-    }
-
-    /**
-     * makes code more readable
-     */
-    private double cos(double a){
-        return Math.cos(a);
-    }
-
-    /**
-     * makes code more readable
-     */
-    private double sqrt(double a){
-        return Math.sqrt(a);
-    }
 }
