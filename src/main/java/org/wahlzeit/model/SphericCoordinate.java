@@ -138,11 +138,6 @@ public class SphericCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public int hashCode() {
-        return (int) (this.getRadius() + this.getTheta() + this.getPhi());
-    }
-
-    @Override
     public String getIdAsString() {
         return null;
     }
