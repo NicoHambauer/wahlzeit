@@ -100,29 +100,29 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
     }
 
 
-    public void assertClassInvariants(){
+    private void assertClassInvariants(){
         //no class invariants in the abstract class, only in subclasses
     }
 
-    public void assertIsValidCoordinate(Coordinate co){
+    private void assertIsValidCoordinate(Coordinate co){
         if(co == null){
             throw new IllegalArgumentException("Argument Coordinate co hast to be != null");
         }
     }
 
-    public void assertIsValidDistance(double distance){
+    private void assertIsValidDistance(double distance){
         if(distance < 0){
             throw new RuntimeException("Calculated distance between Coordinates should be >= 0, but was:" + distance);
         }
     }
 
-    public void assertIsValidCentralAngle(double angle){
+    private void assertIsValidCentralAngle(double angle){
         if (angle < Math.toRadians(0.0) || angle > Math.toRadians(360.0)){
             throw new RuntimeException("Central Angle should always be between 0 and 360 deg, but was:" + angle);
         }
     }
 
-    public void assertObjectIsCoordinate(Object obj){
+    private void assertObjectIsCoordinate(Object obj){
         if(obj == null){
             throw new IllegalArgumentException("The Object which was tried to compare was null");
         }
@@ -131,9 +131,16 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
         }
     }
 
-    public void assertIsValidHashCode(int hc){
+    private void assertIsValidHashCode(int hc){
         if(hc < 0){
             throw new RuntimeException("HashCode invalid (<0), was:" + hc);
+        }
+    }
+
+    protected class UncheckedCoordinateException extends Exception {
+
+        public UncheckedCoordinateException(String msg){
+            super(msg);
         }
     }
 

@@ -133,4 +133,9 @@ public class CartesianCoordinate extends AbstractCoordinate {
     public int hashCode() {
         return (int) (this.getX() + this.getY() + this.getZ());
     }
+
+
+    private void assertClassInvariants(){
+        //no class invariants in the abstract class, only in subclasses
+    }
 }
