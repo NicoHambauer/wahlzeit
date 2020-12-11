@@ -25,5 +25,4 @@ public interface Coordinate {
 
     public boolean isEqual(Coordinate other_Coordinate);
 
-
 }

@@ -2,6 +2,7 @@ package org.wahlzeit.model;
 
 import org.wahlzeit.services.DataObject;
 
+import java.awt.geom.Arc2D;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.PreparedStatement;
@@ -57,9 +58,13 @@ public class CartesianCoordinate extends AbstractCoordinate {
 
     @Override
     public void writeOn(ResultSet rset) throws SQLException {
+        assertClassInvariants();
+        assertIsNotNull(rset);
+        assertIsNotNull(rset);
         rset.updateDouble("coordinate_x", getX());
         rset.updateDouble("coordinate_y", getY());
         rset.updateDouble("coordinate_z", getZ());
+        assertClassInvariants();
     }
 
     @Override
@@ -71,6 +76,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
     public void readFrom(ResultSet rset) throws SQLException {
         //if the value is SQL NULL, 0 is returned by rset.getDouble, in general wahlzeit has no ui input for coordinates,
         //so it will always return 0, therefore new Location(); could also be used, as long as it has no ui input for it
+        assertClassInvariants();
+        assertIsNotNull(rset);
         double coordinate_x = rset.getDouble("coordinate_x");
         double coordinate_y = rset.getDouble("coordinate_y");
         double coordinate_z = rset.getDouble("coordinate_z");
@@ -79,6 +86,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
         setY(coordinate_y);
         setZ(coordinate_z);
 
+        assertClassInvariants();
     }
 
     @Override
@@ -89,6 +97,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
+        assertClassInvariants();
         return this;
     }
 
@@ -96,7 +105,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @return Physical Representation of SphericCoordinate
      */
     @Override
-    public SphericCoordinate asSphericCoordinate() {//throws divi ex
+    public SphericCoordinate asSphericCoordinate() {
+        assertClassInvariants();
         CartesianCoordinate origin = new CartesianCoordinate(0.0, 0.0, 0.0);
         double r = origin.doGetDistance(this);
         if(Math.abs(r - 0.0) <= (1 / Math.pow(10, SCALE)) ){
@@ -104,20 +114,28 @@ public class CartesianCoordinate extends AbstractCoordinate {
         }
         double phi = Math.atan2(this.getY(), this.getX());
         double theta = Math.acos(this.getZ() / r);
-        return new SphericCoordinate(r, theta, phi);
+        SphericCoordinate sphericCoordinate = new SphericCoordinate(r, theta, phi);
+
+        assertIsNotNull(sphericCoordinate);
+        assertClassInvariants();
+        return sphericCoordinate;
     }
 
     protected double doGetDistance(CartesianCoordinate cartesianCoordinate){
-        if (cartesianCoordinate == null) throw new IllegalArgumentException("Coordinate to get Distance to is null");
+        assertClassInvariants();
+        assertIsNotNull(cartesianCoordinate);
 
         double x_vec = cartesianCoordinate.getX() - this.getX();
         double y_vec = cartesianCoordinate.getY() - this.getY();
         double z_vec = cartesianCoordinate.getZ() - this.getZ();
 
+        assertClassInvariants();
         return Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
     }
 
     public boolean doIsEqual(CartesianCoordinate other_cartesianCoordinate){
+        assertClassInvariants();
+        assertIsNotNull(other_cartesianCoordinate);
         //carefully compares double coordinates since double is not exakt
         BigDecimal t_x = (new BigDecimal(this.getX())).setScale(SCALE, RoundingMode.DOWN);
         BigDecimal c_x = (new BigDecimal(other_cartesianCoordinate.getX())).setScale(SCALE, RoundingMode.DOWN);
@@ -126,16 +144,27 @@ public class CartesianCoordinate extends AbstractCoordinate {
         BigDecimal t_z = (new BigDecimal(this.getZ())).setScale(SCALE, RoundingMode.DOWN);
         BigDecimal c_z = (new BigDecimal(other_cartesianCoordinate.getZ())).setScale(SCALE, RoundingMode.DOWN);
 
+        assertClassInvariants();
+
         return t_x.compareTo(c_x) == 0 && t_y.compareTo(c_y) == 0 && t_z.compareTo(c_z) == 0;
     }
 
     @Override
     public int hashCode() {
+        assertClassInvariants();
         return (int) (this.getX() + this.getY() + this.getZ());
     }
 
 
-    private void assertClassInvariants(){
-        //no class invariants in the abstract class, only in subclasses
+    private void assertClassInvariants() {
+        if(Double.isNaN(this.x) || Double.isNaN(this.y) || Double.isNaN(this.z)){
+            throw new IllegalStateException("CartesianCoordinate hast to have x, y, z, which need to be double Numbers");
+        }
+    }
+
+    private void assertIsNotNull(Object obj){
+        if(obj == null){
+            throw new IllegalArgumentException("argument was null");
+        }
     }
 }

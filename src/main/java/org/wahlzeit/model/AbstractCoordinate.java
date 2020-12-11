@@ -137,11 +137,4 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
         }
     }
 
-    protected class UncheckedCoordinateException extends Exception {
-
-        public UncheckedCoordinateException(String msg){
-            super(msg);
-        }
-    }
-
 }
