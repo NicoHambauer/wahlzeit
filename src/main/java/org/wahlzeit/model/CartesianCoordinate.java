@@ -19,7 +19,6 @@
  */
 
 package org.wahlzeit.model;
-
 import org.wahlzeit.services.DataObject;
 
 import java.awt.geom.Arc2D;
