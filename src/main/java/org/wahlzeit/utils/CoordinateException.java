@@ -18,31 +18,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.utils;
 
-public interface Coordinate {
-
-    final int SCALE = 6; //compares Coordinates by amount of SCALE positions after decimal point
+public class CoordinateException extends RuntimeException{
 
     /**
-     *
-     * @methodtype Query Method Interpretation Method
-     * @return a Coordinate as an CartesianCoordinate
+     * Custom CoordinateException (Unchecked)
      */
-    public CartesianCoordinate asCartesianCoordinate();
-
-
-    public double getCartesianDistance(Coordinate other_Coordinate);
-
-    /**
-     *
-     * @methodtype Query Method Interpretation Method
-     * @return a Coordinate as an SphericCoordinate
-     */
-    public SphericCoordinate asSphericCoordinate();
-
-    public double getCentralAngle(Coordinate other_Coordinate);
-
-    public boolean isEqual(Coordinate other_Coordinate);
-
+    public CoordinateException(String msg){
+        super(msg);
+    }
 }
