@@ -1,6 +1,8 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.DataObject;
+import org.wahlzeit.utils.CheckedCoordinateException;
+import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,9 +10,9 @@ import java.sql.SQLException;
 
 public abstract class AbstractCoordinate extends DataObject implements Coordinate{
 
-    public abstract CartesianCoordinate asCartesianCoordinate();
+    public abstract CartesianCoordinate asCartesianCoordinate() throws CheckedCoordinateException;
 
-    public abstract SphericCoordinate asSphericCoordinate();
+    public abstract SphericCoordinate asSphericCoordinate() throws CheckedCoordinateException;
 
     public abstract void readFrom(ResultSet rset) throws SQLException;
 
@@ -18,65 +20,66 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
 
     public abstract void writeId(PreparedStatement stmt, int pos) throws SQLException;
 
+    /**
+     * Part of Coordinate Interface
+     * @param other_Coordinate
+     * @return cartesian Distance from  this coordinate to other coordinate
+     */
     @Override
-    public double getCartesianDistance(Coordinate other_Coordinate) {
+    public double getCartesianDistance(Coordinate other_Coordinate) throws CheckedCoordinateException {
         assertClassInvariants();
         assertIsValidCoordinate(other_Coordinate);
 
         CartesianCoordinate this_coordinate = this.asCartesianCoordinate();
         CartesianCoordinate other_cartesianCoordinate = other_Coordinate.asCartesianCoordinate();
-        double distance = this_coordinate.doGetDistance(other_cartesianCoordinate);
+        double distance;
+        try{
+            distance = this_coordinate.doGetDistance(other_cartesianCoordinate);
+        } catch (UncheckedCoordinateException un){
+            throw new CheckedCoordinateException("Cartesian Distance was not calculated correctly", un);
+        }
 
         assertIsValidCoordinate(this_coordinate);
         assertIsValidCoordinate(other_cartesianCoordinate);
         assertIsValidDistance(distance);
-
         assertClassInvariants();
         return distance;
     }
 
+    /**
+     * Part of Coordinate Interface
+     * @param other_Coordinate
+     * @return central angle in range 0 and 2*PI from this coordinate to other coordinate
+     */
     @Override
-    public double getCentralAngle(Coordinate other_Coordinate) {
+    public double getCentralAngle(Coordinate other_Coordinate) throws CheckedCoordinateException {
         assertClassInvariants();
         assertIsValidCoordinate(other_Coordinate);
 
         SphericCoordinate this_spheric_coordinate = this.asSphericCoordinate();
         SphericCoordinate other_spheric_coordinate = other_Coordinate.asSphericCoordinate();//other_spheric_coordinate
-        double centralAngle = this_spheric_coordinate.doGetCentralAngle(other_spheric_coordinate);
+        double centralAngle;
+        try{
+            centralAngle = this_spheric_coordinate.doGetCentralAngle(other_spheric_coordinate);
+        } catch (UncheckedCoordinateException un){
+            throw new CheckedCoordinateException("CentralAngle was not calculated correctly", un);
+        }
 
         assertIsValidCoordinate(this_spheric_coordinate);
         assertIsValidCoordinate(other_spheric_coordinate);
         assertIsValidCentralAngle(centralAngle);
-
         assertClassInvariants();
         return centralAngle;
     }
 
+    /**
+     * Part of Coordinate Interface
+     * @methodtype query comparison
+     * @param other_Coordinate
+     * @return true if this coordinate is equal to other coordinate
+     */
     @Override
-    public boolean equals(Object other_object) {
-        assertClassInvariants();
-        assertObjectIsCoordinate(other_object);
-
-        Coordinate other_Coordinate = (Coordinate) other_object;
-
-        assertIsValidCoordinate(other_Coordinate);
-        assertClassInvariants();
-        return this.isEqual(other_Coordinate);
-    }
-
-    @Override
-    public int hashCode() {
-        assertClassInvariants();
-
-        int hc = this.asCartesianCoordinate().hashCode();
-
-        assertIsValidHashCode(hc);
-        assertClassInvariants();
-        return hc;
-    }
-
-    @Override
-    public boolean isEqual(Coordinate other_Coordinate) {
+    public boolean isEqual(Coordinate other_Coordinate) throws CheckedCoordinateException {
         assertClassInvariants();
         assertIsValidCoordinate(other_Coordinate);
 
@@ -85,10 +88,51 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
 
         assertIsValidCoordinate(this_cartesian_coordinate);
         assertIsValidCoordinate(other_cartesian_coordinate);
+        assertClassInvariants();
+        return this_cartesian_coordinate.doIsEqual(other_cartesian_coordinate);
+    }
 
+    /**
+     * @methodtype query comparison
+     * @param other_object
+     * @return
+     */
+    @Override
+    public boolean equals(Object other_object)  {
+        assertClassInvariants();
+        assertObjectIsCoordinate(other_object);
+
+        Coordinate other_Coordinate = (Coordinate) other_object;
+
+        assertIsValidCoordinate(other_Coordinate);
+        assertClassInvariants();
+        boolean isEqual;
+        try{
+            isEqual = this.isEqual(other_Coordinate);
+        } catch (CheckedCoordinateException ce){
+            throw new RuntimeException("Calculation of isEquals went wrong. Coordinate failed.", ce);
+        }
+        return isEqual;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int hashCode(){
         assertClassInvariants();
 
-        return this_cartesian_coordinate.doIsEqual(other_cartesian_coordinate);
+        int hc;
+        try{
+            hc = this.asCartesianCoordinate().hashCode();
+        } catch (CheckedCoordinateException ce){
+            throw new RuntimeException("Calculation of HashCode went wrong. Coordinate failed.", ce);
+        }
+
+        assertIsValidHashCode(hc);
+        assertClassInvariants();
+        return hc;
     }
 
     /**

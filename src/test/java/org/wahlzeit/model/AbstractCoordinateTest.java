@@ -3,6 +3,7 @@ package org.wahlzeit.model;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
+import org.wahlzeit.utils.CheckedCoordinateException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +37,12 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
     @Test
     public void testCartesianDistance(){
         //arrange see init act
-        double distance = abs_co1.getCartesianDistance(abs_co2);
+        double distance = 0.0;
+        try{
+            distance = abs_co1.getCartesianDistance(abs_co2);
+        } catch (CheckedCoordinateException ce){
+            ce.printStackTrace();
+        }
         //assert
         assertTrue(Math.abs(distance - to_be_distance) <= maxdiff);
     }
@@ -44,7 +50,12 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
     @Test
     public void testCentralAngle(){
         //arrange see init act
-        double central_angle = abs_co1.getCentralAngle(abs_co2);
+        double central_angle = 0.0;
+        try{
+            central_angle = abs_co1.getCentralAngle(abs_co2);
+        } catch (CheckedCoordinateException ce){
+            ce.printStackTrace();
+        }
         //assert
         assertTrue(Math.abs(central_angle - to_be_central_angle) <= maxdiff);
     }

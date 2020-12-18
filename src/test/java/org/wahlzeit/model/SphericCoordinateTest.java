@@ -3,6 +3,8 @@ package org.wahlzeit.model;
 import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.services.DataObject;
+import org.wahlzeit.utils.CheckedCoordinateException;
+
 import static org.junit.Assert.*;
 
 public class SphericCoordinateTest {
@@ -49,7 +51,12 @@ public class SphericCoordinateTest {
         //arrange also see init
         other_co = new SphericCoordinate(5.0, (Math.PI / 2.0) * (2.0/3.0), 0.0);
         //act
-        double distance = co.getCartesianDistance(other_co);
+        double distance = 0.0;
+        try{
+            distance = co.getCartesianDistance(other_co);
+        } catch (CheckedCoordinateException ce){
+            ce.printStackTrace();
+        }
         //assert
         assertTrue(Math.abs(distance - 5.0) <= max_diff);
     }
@@ -87,8 +94,12 @@ public class SphericCoordinateTest {
         //arrange
         other_co = new SphericCoordinate(9.0, Math.toRadians(35.0), Math.PI / 2.0);
         SphericCoordinate second_co = new SphericCoordinate(9.0, Math.toRadians(30.0), Math.PI * 1.5);
-        double central_angle = other_co.getCentralAngle(second_co);
-        System.out.println(central_angle);
+        double central_angle = 0.0;
+        try{
+            central_angle = other_co.getCentralAngle(second_co);
+        } catch (CheckedCoordinateException ce){
+            ce.printStackTrace();
+        }
         assertTrue( Math.abs(central_angle - (Math.toRadians(65.0))) <= max_diff);
     }
 

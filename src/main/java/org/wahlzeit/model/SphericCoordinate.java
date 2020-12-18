@@ -54,18 +54,16 @@ public class SphericCoordinate extends AbstractCoordinate{
      * @methodtype constructor
      */
     public SphericCoordinate(double radius, double theta, double phi){
-        if(theta > Math.PI) throw new IllegalArgumentException("Theta must be between 0 and PI");
-        if(phi > Math.PI * 2) throw new IllegalArgumentException("Theta must be between 0 and 2 * PI");
-        if(radius < 0) throw new IllegalArgumentException("radius must be >= 0");
-        this.radius = radius;
-        this.theta = theta;
-        this.phi = phi;
+        setRadius(radius);
+        setTheta(theta);
+        setPhi(phi);
     }
 
     /**
      * @methodtype set
      */
     public void setPhi(double phi) {
+        if(phi > Math.PI * 2) throw new IllegalArgumentException("Theta must be between 0 and 2 * PI");
         this.phi = phi;
     }
 
@@ -73,6 +71,7 @@ public class SphericCoordinate extends AbstractCoordinate{
      * @methodtype set
      */
     public void setTheta(double theta) {
+        if(theta > Math.PI) throw new IllegalArgumentException("Theta must be between 0 and PI");
         this.theta = theta;
     }
 
@@ -80,6 +79,7 @@ public class SphericCoordinate extends AbstractCoordinate{
      * @methodtype set
      */
     public void setRadius(double radius) {
+        if(radius < 0) throw new IllegalArgumentException("radius must be >= 0");
         this.radius = radius;
     }
 

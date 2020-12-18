@@ -20,12 +20,12 @@
 
 package org.wahlzeit.utils;
 
-public class CoordinateException extends RuntimeException{
+public class UncheckedCoordinateException extends RuntimeException{
 
     /**
      * Custom CoordinateException (Unchecked)
      */
-    public CoordinateException(String msg){
+    public UncheckedCoordinateException(String msg){
         super(msg);
     }
 }

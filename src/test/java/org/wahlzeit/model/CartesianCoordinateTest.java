@@ -3,6 +3,7 @@ package org.wahlzeit.model;
 import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.services.DataObject;
+import org.wahlzeit.utils.CheckedCoordinateException;
 
 import static org.junit.Assert.*;
 
@@ -79,7 +80,12 @@ public class CartesianCoordinateTest {
         //arrange
         other_co = new CartesianCoordinate(3.0, 3.0, 1.5);
         //act
-        double distance = co.getCartesianDistance(other_co);
+        double distance = 0.0;
+        try{
+            distance = co.getCartesianDistance(other_co);
+        } catch (CheckedCoordinateException ce){
+            ce.printStackTrace();
+        }
         //assert
         assertTrue(Math.abs(distance - 4.5) <= max_diff);
 

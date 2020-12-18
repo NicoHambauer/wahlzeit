@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.utils.CheckedCoordinateException;
+
 public interface Coordinate {
 
     final int SCALE = 6; //compares Coordinates by amount of SCALE positions after decimal point
@@ -29,20 +31,35 @@ public interface Coordinate {
      * @methodtype Query Method Interpretation Method
      * @return a Coordinate as an CartesianCoordinate
      */
-    public CartesianCoordinate asCartesianCoordinate();
-
-
-    public double getCartesianDistance(Coordinate other_Coordinate);
+    public CartesianCoordinate asCartesianCoordinate() throws CheckedCoordinateException;
 
     /**
      *
      * @methodtype Query Method Interpretation Method
      * @return a Coordinate as an SphericCoordinate
      */
-    public SphericCoordinate asSphericCoordinate();
+    public SphericCoordinate asSphericCoordinate() throws CheckedCoordinateException;
 
-    public double getCentralAngle(Coordinate other_Coordinate);
+    /**
+     *
+     * @param other_Coordinate
+     * @return cartesian Distance from  this coordinate to other coordinate
+     */
+    public double getCartesianDistance(Coordinate other_Coordinate) throws CheckedCoordinateException;
 
-    public boolean isEqual(Coordinate other_Coordinate);
+
+    /**
+     *
+     * @param other_Coordinate
+     * @return central angle in range 0 and 2*PI from this coordinate to other coordinate
+     */
+    public double getCentralAngle(Coordinate other_Coordinate) throws CheckedCoordinateException;
+
+    /**
+     * @methodtype query comparison
+     * @param other_Coordinate
+     * @return true if this coordinate is equal to other coordinate
+     */
+    public boolean isEqual(Coordinate other_Coordinate) throws CheckedCoordinateException;
 
 }
