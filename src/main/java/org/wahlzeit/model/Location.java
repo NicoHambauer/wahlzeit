@@ -1,6 +1,7 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.DataObject;
+import org.wahlzeit.utils.CheckedCoordinateException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,7 +58,13 @@ public class Location extends DataObject {
             return false;
         }
         Location other_location = (Location) other_object;
-        return this.cartesianCoordinate.isEqual(other_location.cartesianCoordinate);
+        boolean eq = false;
+        try {
+            eq = this.cartesianCoordinate.isEqual(other_location.cartesianCoordinate);
+        } catch (CheckedCoordinateException e) {
+            e.printStackTrace();
+        }
+        return eq;
     }
 
     @Override

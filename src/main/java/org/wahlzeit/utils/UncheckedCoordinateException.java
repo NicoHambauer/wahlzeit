@@ -28,4 +28,11 @@ public class UncheckedCoordinateException extends RuntimeException{
     public UncheckedCoordinateException(String msg){
         super(msg);
     }
+
+    /**
+     * Custom CoordinateException (Unchecked)
+     */
+    public UncheckedCoordinateException(String msg, Throwable th){
+        super(msg, th);
+    }
 }

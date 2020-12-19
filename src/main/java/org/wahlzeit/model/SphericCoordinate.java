@@ -20,9 +20,8 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.services.DataObject;
+import org.wahlzeit.utils.UncheckedCoordinateException;
 
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,9 +39,9 @@ public class SphericCoordinate extends AbstractCoordinate{
      * @methodtype constructor
      */
     public SphericCoordinate(){
-        this.radius = 0.0;
-        this.theta = 0.0;
-        this.phi = 0.0;
+        setRadius(0.0);
+        setTheta(0.0);
+        setPhi(0.0);
     }
 
     /**
@@ -50,7 +49,7 @@ public class SphericCoordinate extends AbstractCoordinate{
      * With theta as polar angle and phi as horizontal/"azimut" angle
      * in radians
      * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Definition
-     *
+     * @throws IllegalArgumentException if argument was not a valid double argument for the given radius, theta or phi
      * @methodtype constructor
      */
     public SphericCoordinate(double radius, double theta, double phi){
@@ -168,9 +167,17 @@ public class SphericCoordinate extends AbstractCoordinate{
 
         double numerator = Math.sqrt( pow1 + pow2);
         double denominator = (Math.sin(bigPhi1) * Math.sin(bigPhi2)) + (Math.cos(bigPhi1) * Math.cos(bigPhi2) * Math.cos(deltaLamda));
-
+        double frac;
+        try{
+            frac = numerator / denominator;
+        } catch (ArithmeticException ar){
+            throw new UncheckedCoordinateException("Division by zero in getCentralAngle", ar);
+        }
         assertClassInvariants();
-        return Math.atan( numerator / denominator);
+        assertIsValidDouble(numerator);
+        assertIsValidDouble(denominator);
+
+        return Math.atan(frac);
     }
 
     @Override
@@ -178,33 +185,49 @@ public class SphericCoordinate extends AbstractCoordinate{
         return null;
     }
 
+
+    private void assertIsNotNull(Object obj){
+        if(obj == null){
+            throw new IllegalArgumentException("argument was null");
+        }
+    }
+
     /**
+     * @throws UncheckedCoordinateException
+     */
+    private void assertClassInvariants() {
+        if(Double.isNaN(this.phi) || Double.isNaN(this.theta) || Double.isNaN(this.radius)){
+            throw new UncheckedCoordinateException("CartesianCoordinate hast to have phi, theta, radius which need to be double Numbers");
+        }
+        if(this.phi > Math.toRadians(360.0) || this.phi < Math.toRadians(0.0) || this.theta > Math.toRadians(180.0) || this.theta < Math.toRadians(0.0) || this.radius < 0.0){
+            throw new UncheckedCoordinateException("CartesianCoordinate hast to have 0.0 < phi < 2 PI, 0.0 < theta < PI, radius (>0)");
+        }
+    }
+
+
+    /**
+     * @throws UncheckedCoordinateException
+     */
+    private void assertIsValidDouble(double d){
+        if(Double.isNaN(d)){
+            throw new UncheckedCoordinateException("Double Value calculated was NaN");
+        }
+    }
+
+    /**
+     * @methodtype helper
      * @return Phi, the mathimaticl complementary of theta or more specific the geographic Latitude
      * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
      */
     private double doGetMathPhi(double theta){ return Math.toRadians(90.0) - theta; }
 
     /**
+     * @methodtype helper
      * @return Lamda the mathimaticl complementary of phi or more specific the geographic Longitude
      * see https://de.wikipedia.org/wiki/Kugelkoordinaten#Andere%20Konventionen
      */
     private double doGetMathDeltaLambda(double phi1, double phi2){
         return Math.abs(phi2 - phi1);
-    }
-
-    private void assertClassInvariants() {
-        if(Double.isNaN(this.phi) || Double.isNaN(this.theta) || Double.isNaN(this.radius)){
-            throw new IllegalStateException("CartesianCoordinate hast to have phi, theta, radius which need to be double Numbers");
-        }
-        if(this.phi > Math.toRadians(360.0) || this.phi < Math.toRadians(0.0) || this.theta > Math.toRadians(180.0) || this.theta < Math.toRadians(0.0) || this.radius < 0.0){
-            throw new IllegalStateException("CartesianCoordinate hast to have 0.0 < phi < 2 PI, 0.0 < theta < PI, radius (>0)");
-        }
-    }
-
-    private void assertIsNotNull(Object obj){
-        if(obj == null){
-            throw new IllegalArgumentException("argument was null");
-        }
     }
 
 }

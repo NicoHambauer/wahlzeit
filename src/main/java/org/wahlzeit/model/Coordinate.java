@@ -31,14 +31,14 @@ public interface Coordinate {
      * @methodtype Query Method Interpretation Method
      * @return a Coordinate as an CartesianCoordinate
      */
-    public CartesianCoordinate asCartesianCoordinate() throws CheckedCoordinateException;
+    public CartesianCoordinate asCartesianCoordinate();
 
     /**
      *
      * @methodtype Query Method Interpretation Method
      * @return a Coordinate as an SphericCoordinate
      */
-    public SphericCoordinate asSphericCoordinate() throws CheckedCoordinateException;
+    public SphericCoordinate asSphericCoordinate();
 
     /**
      *

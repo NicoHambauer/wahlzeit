@@ -20,6 +20,7 @@
 
 package org.wahlzeit.model;
 import org.wahlzeit.services.DataObject;
+import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import java.awt.geom.Arc2D;
 import java.math.BigDecimal;
@@ -27,28 +28,29 @@ import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class CartesianCoordinate extends AbstractCoordinate {
 
     private double x, y, z;
 
     /**
-     *
+     * CartesianCoordinate standart Constructor initializes a Coordinate with x, y, z = 0.0
      * @methodtype constructor
      */
     public CartesianCoordinate(){
-        this.x = 0.0;
-        this.y = 0.0;
-        this.z = 0.0;
+        setX(0.0);
+        setY(0.0);
+        setZ(0.0);
     }
     /**
-     *
+     * CartesianCoordinate Constructor
      * @methodtype constructor
      */
     public CartesianCoordinate(double x, double y, double z){
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        setX(x);
+        setY(y);
+        setZ(z);
     }
 
     public double getX() {
@@ -114,6 +116,9 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
 
+    /**
+     * Part of Coordinate Interface
+     */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
         assertClassInvariants();
@@ -121,6 +126,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     /**
+     * Part of Coordinate Interface
      * @return Physical Representation of SphericCoordinate
      */
     @Override
@@ -148,8 +154,10 @@ public class CartesianCoordinate extends AbstractCoordinate {
         double y_vec = cartesianCoordinate.getY() - this.getY();
         double z_vec = cartesianCoordinate.getZ() - this.getZ();
 
+        double distance = Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
         assertClassInvariants();
-        return Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
+        asserIsValidDouble(distance);
+        return distance;
     }
 
     public boolean doIsEqual(CartesianCoordinate other_cartesianCoordinate){
@@ -171,15 +179,29 @@ public class CartesianCoordinate extends AbstractCoordinate {
     @Override
     public int hashCode() {
         assertClassInvariants();
-        return (int) (this.getX() + this.getY() + this.getZ());
+        return Objects.hash(this.getX(), this.getY(), this.getZ());
     }
 
 
+    /**
+     * @throws UncheckedCoordinateException
+     *
+     */
     private void assertClassInvariants() {
         if(Double.isNaN(this.x) || Double.isNaN(this.y) || Double.isNaN(this.z)){
-            throw new IllegalStateException("CartesianCoordinate hast to have x, y, z, which need to be double Numbers");
+            throw new UncheckedCoordinateException("CartesianCoordinate hast to have x, y, z, which need to be double Numbers");
         }
     }
+
+    /**
+     * @throws UncheckedCoordinateException
+     */
+    private void asserIsValidDouble(double d){
+        if(Double.isNaN(d)){
+            throw new UncheckedCoordinateException("Double Value calculated was NaN");
+        }
+    }
+
 
     private void assertIsNotNull(Object obj){
         if(obj == null){

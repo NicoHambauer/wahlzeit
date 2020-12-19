@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2020 by Nico Hambauer, https://github.com/NicoHambauer
+ *
+ * This file is part of the Wahlzeit photo rating application.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public
+ * License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.DataObject;
@@ -10,9 +30,9 @@ import java.sql.SQLException;
 
 public abstract class AbstractCoordinate extends DataObject implements Coordinate{
 
-    public abstract CartesianCoordinate asCartesianCoordinate() throws CheckedCoordinateException;
+    public abstract CartesianCoordinate asCartesianCoordinate();
 
-    public abstract SphericCoordinate asSphericCoordinate() throws CheckedCoordinateException;
+    public abstract SphericCoordinate asSphericCoordinate();
 
     public abstract void readFrom(ResultSet rset) throws SQLException;
 
@@ -22,6 +42,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
 
     /**
      * Part of Coordinate Interface
+     * @throws CheckedCoordinateException
      * @param other_Coordinate
      * @return cartesian Distance from  this coordinate to other coordinate
      */
@@ -48,6 +69,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
 
     /**
      * Part of Coordinate Interface
+     * @throws CheckedCoordinateException
      * @param other_Coordinate
      * @return central angle in range 0 and 2*PI from this coordinate to other coordinate
      */
@@ -75,6 +97,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
     /**
      * Part of Coordinate Interface
      * @methodtype query comparison
+     * @throws CheckedCoordinateException
      * @param other_Coordinate
      * @return true if this coordinate is equal to other coordinate
      */
@@ -89,7 +112,15 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
         assertIsValidCoordinate(this_cartesian_coordinate);
         assertIsValidCoordinate(other_cartesian_coordinate);
         assertClassInvariants();
-        return this_cartesian_coordinate.doIsEqual(other_cartesian_coordinate);
+
+        boolean isEqual;
+        try{
+            isEqual = this_cartesian_coordinate.doIsEqual(other_cartesian_coordinate);
+        } catch (UncheckedCoordinateException un){
+            throw new CheckedCoordinateException("Calculation of Equality failed. Coordinate failed.", un);
+        }
+
+        return isEqual;
     }
 
     /**
@@ -123,12 +154,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
     public int hashCode(){
         assertClassInvariants();
 
-        int hc;
-        try{
-            hc = this.asCartesianCoordinate().hashCode();
-        } catch (CheckedCoordinateException ce){
-            throw new RuntimeException("Calculation of HashCode went wrong. Coordinate failed.", ce);
-        }
+        int hc = this.asCartesianCoordinate().hashCode();
 
         assertIsValidHashCode(hc);
         assertClassInvariants();
@@ -156,13 +182,13 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
 
     private void assertIsValidDistance(double distance){
         if(distance < 0){
-            throw new RuntimeException("Calculated distance between Coordinates should be >= 0, but was:" + distance);
+            throw new UncheckedCoordinateException("Calculated distance between Coordinates should be >= 0, but was:" + distance);
         }
     }
 
     private void assertIsValidCentralAngle(double angle){
         if (angle < Math.toRadians(0.0) || angle > Math.toRadians(360.0)){
-            throw new RuntimeException("Central Angle should always be between 0 and 360 deg, but was:" + angle);
+            throw new UncheckedCoordinateException("Central Angle should always be between 0 and 360 deg, but was:" + angle);
         }
     }
 
@@ -177,7 +203,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
 
     private void assertIsValidHashCode(int hc){
         if(hc < 0){
-            throw new RuntimeException("HashCode invalid (<0), was:" + hc);
+            throw new UncheckedCoordinateException("HashCode invalid (<0), was:" + hc);
         }
     }
 
