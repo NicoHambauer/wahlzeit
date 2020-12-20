@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.CheckedCoordinateException;
+import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import static org.junit.Assert.*;
 
@@ -124,6 +125,33 @@ public class CartesianCoordinateTest {
         co.setZ(1.0);
         //assert
         assertEquals(co.hashCode(), other_co.hashCode());
+
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalArgument(){
+        //arrange
+        other_co = null;
+        //act
+        co.setX(1.0);
+        co.setY(1.0);
+        co.setZ(1.0);
+        //test/assert
+        co.equals(other_co);
+
+    }
+
+    @Test (expected = UncheckedCoordinateException.class)
+    public void testUncheckedCoordinateException(){
+        //arrange
+        other_co = new CartesianCoordinate(1.0,1.0,1.0);
+        //act
+        co.setX(1.0);
+        co.setY(1.0);
+        co.setZ(1.0);
+        other_co.setX(Double.NaN);
+        //test/assert
+        co.equals(other_co);
 
     }
 

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.CheckedCoordinateException;
+import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import static org.junit.Assert.*;
 
@@ -113,5 +114,40 @@ public class SphericCoordinateTest {
         assertTrue(co.equals(other_co));
         assertTrue(c3.equals(c4));
         assertFalse(c3.equals(c5));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalPhi(){
+        other_co = new SphericCoordinate(0, 0, 2.1 * Math.PI);
+        //assert
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalTheta(){
+        other_co = new SphericCoordinate(0, 1.1 * Math.PI, 0.0);
+        //assert
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalRadius(){
+        other_co = new SphericCoordinate(-5.0, 0.0, 0.0);
+        //assert
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testNullArgument(){
+        //arrange
+        other_co = null;
+        //act
+        double centralAngle = co.doGetCentralAngle(other_co);
+    }
+
+    @Test (expected = UncheckedCoordinateException.class)
+    public void testUncheckedCoordinateException(){
+        //arrange
+        other_co = new SphericCoordinate(0, 0.8 * Math.PI, 0.0);
+        other_co.setPhi(Double.NaN);
+        //act
+        double centralAngle = co.doGetCentralAngle(other_co);
     }
 }
