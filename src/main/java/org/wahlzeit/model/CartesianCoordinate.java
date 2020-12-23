@@ -22,6 +22,7 @@ package org.wahlzeit.model;
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.UncheckedCoordinateException;
 
+import javax.mail.MethodNotSupportedException;
 import java.awt.geom.Arc2D;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,49 +33,66 @@ import java.util.Objects;
 
 public class CartesianCoordinate extends AbstractCoordinate {
 
-    private double x, y, z;
+    private final double x, y, z;
 
     /**
+     * Value Object Representation and Sharing Values in AbstractCoordinate
+     * @methodtype
+     * @return If Coordinate with the values x, y, z already exists returns that specific CartesianCoordinate, else
+     *         returns new CartesianCoordinate
+     */
+    public static CartesianCoordinate getOrCreateCartesianCoordinate(double x, double y, double z){
+        CartesianCoordinate cc = new CartesianCoordinate(x, y, z);
+        Coordinate coordinateAlreadyStored = coordinates.putIfAbsent(cc.hashCode(), cc);
+        if (coordinateAlreadyStored == null){
+            //no coordinate stored for this key yet --> creates coordinate
+            return cc;
+        }
+        return coordinates.get(cc.hashCode()).asCartesianCoordinate();
+    }
+
+    /**
+     * Value Object Representation and Sharing Values in AbstractCoordinate
+     * @methodtype
+     * @return If Coordinate with the values x, y, z already exists returns that specific CartesianCoordinate, else
+     *         returns new CartesianCoordinate
+     */
+    public static CartesianCoordinate getOrCreateCartesianCoordinate(){
+        return getOrCreateCartesianCoordinate(0.0, 0.0, 0.0);
+    }
+
+    /**
+     * Value Object Representation so constructor is hidden
      * CartesianCoordinate standart Constructor initializes a Coordinate with x, y, z = 0.0
      * @methodtype constructor
      */
-    public CartesianCoordinate(){
-        setX(0.0);
-        setY(0.0);
-        setZ(0.0);
+    private CartesianCoordinate(){
+        this(0.0, 0.0, 0.0);
     }
     /**
+     * Value Object Representation so constructor is hidden
      * CartesianCoordinate Constructor
      * @methodtype constructor
      */
-    public CartesianCoordinate(double x, double y, double z){
-        setX(x);
-        setY(y);
-        setZ(z);
+    private CartesianCoordinate(double x, double y, double z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public double getX() {
+        assertClassInvariants();
         return x;
     }
 
     public double getY() {
+        assertClassInvariants();
         return y;
     }
 
     public double getZ() {
+        assertClassInvariants();
         return z;
-    }
-
-    public void setX(double x){
-        this.x = x;
-    }
-
-    public void setY(double y){
-        this.y = y;
-    }
-
-    public void setZ(double z){
-        this.z = z;
     }
 
     @Override
@@ -95,20 +113,21 @@ public class CartesianCoordinate extends AbstractCoordinate {
 
     @Override
     public void readFrom(ResultSet rset) throws SQLException {
-        //if the value is SQL NULL, 0 is returned by rset.getDouble, in general wahlzeit has no ui input for coordinates,
-        //so it will always return 0, therefore new Location(); could also be used, as long as it has no ui input for it
+        // Since object is immutable and the method is called by this.readFrom there is no option to assign this any of
+        // x, y or z values
+        //Execution will always fail in Value Object Representation, which is ok since coordinates should not change/are immutable
         assertClassInvariants();
         assertIsNotNull(rset);
         double coordinate_x = rset.getDouble("coordinate_x");
         double coordinate_y = rset.getDouble("coordinate_y");
         double coordinate_z = rset.getDouble("coordinate_z");
-
-        setX(coordinate_x);
-        setY(coordinate_y);
-        setZ(coordinate_z);
+        CartesianCoordinate newCartesianCoordinate = getOrCreateCartesianCoordinate(coordinate_x, coordinate_y, coordinate_z);
 
         assertClassInvariants();
+        throw new NoSuchMethodError("Methode worked fine but no Returntype is declared and able to be declared. This method is not supported in Value Object Representation of CartesianCoordinate");
+
     }
+
 
     @Override
     public String getIdAsString() {
@@ -132,14 +151,14 @@ public class CartesianCoordinate extends AbstractCoordinate {
     @Override
     public SphericCoordinate asSphericCoordinate() {
         assertClassInvariants();
-        CartesianCoordinate origin = new CartesianCoordinate(0.0, 0.0, 0.0);
+        CartesianCoordinate origin = getOrCreateCartesianCoordinate(0.0, 0.0, 0.0);
         double r = origin.doGetDistance(this);
         if(Math.abs(r - 0.0) <= (1 / Math.pow(10, SCALE)) ){
-            return new SphericCoordinate();// (equals 0,0,0) since / 0 is not allowed
+            return SphericCoordinate.getOrCreateSphericCoordinate();// (equals 0,0,0) since / 0 is not allowed
         }
         double phi = Math.atan2(this.getY(), this.getX());
         double theta = Math.acos(this.getZ() / r);
-        SphericCoordinate sphericCoordinate = new SphericCoordinate(r, theta, phi);
+        SphericCoordinate sphericCoordinate = SphericCoordinate.getOrCreateSphericCoordinate(r, theta, phi);
 
         assertIsNotNull(sphericCoordinate);
         assertClassInvariants();
@@ -176,12 +195,17 @@ public class CartesianCoordinate extends AbstractCoordinate {
         return t_x.compareTo(c_x) == 0 && t_y.compareTo(c_y) == 0 && t_z.compareTo(c_z) == 0;
     }
 
+
+
     @Override
     public int hashCode() {
         assertClassInvariants();
         return Objects.hash(this.getX(), this.getY(), this.getZ());
     }
 
+
+
+    //Asseretions
 
     /**
      * @throws UncheckedCoordinateException

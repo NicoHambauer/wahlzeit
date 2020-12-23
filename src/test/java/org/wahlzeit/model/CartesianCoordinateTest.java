@@ -16,7 +16,7 @@ public class CartesianCoordinateTest {
 
     @Before //each
     public void init() {
-        co = new CartesianCoordinate();
+        co = CartesianCoordinate.getOrCreateCartesianCoordinate();
     }
     @Test
     public void testSuperClass(){
@@ -35,7 +35,7 @@ public class CartesianCoordinateTest {
     @Test
     public void testConstructor(){
         //arrange
-        co = new CartesianCoordinate(10.0, 10.0, 10.0);
+        co = CartesianCoordinate.getOrCreateCartesianCoordinate(10.0, 10.0, 10.0);
         //act
         double diff_x = Math.abs(co.getX() - 10.0);
         double diff_y = Math.abs(co.getY() - 10.0);
@@ -79,7 +79,7 @@ public class CartesianCoordinateTest {
     @Test
     public void testDistance(){
         //arrange
-        other_co = new CartesianCoordinate(3.0, 3.0, 1.5);
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(3.0, 3.0, 1.5);
         //act
         double distance = 0.0;
         try{
@@ -95,7 +95,7 @@ public class CartesianCoordinateTest {
     @Test
     public void testEqualsSimple(){
         //arrange
-        other_co = new CartesianCoordinate();
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate();
         //act
         //assert
         assertTrue(co.equals(other_co));
@@ -105,7 +105,7 @@ public class CartesianCoordinateTest {
     @Test
     public void testEquals(){
         //arrange
-        other_co = new CartesianCoordinate(1.0,1.0,1.0);
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0,1.0,1.0);
         //act
         co.setX(1.0);
         co.setY(1.0);
@@ -118,7 +118,7 @@ public class CartesianCoordinateTest {
     @Test
     public void testHashCode(){
         //arrange
-        other_co = new CartesianCoordinate(1.0,1.0,1.0);
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0,1.0,1.0);
         //act
         co.setX(1.0);
         co.setY(1.0);
@@ -144,7 +144,7 @@ public class CartesianCoordinateTest {
     @Test (expected = UncheckedCoordinateException.class)
     public void testUncheckedCoordinateException(){
         //arrange
-        other_co = new CartesianCoordinate(1.0,1.0,1.0);
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0,1.0,1.0);
         //act
         co.setX(1.0);
         co.setY(1.0);

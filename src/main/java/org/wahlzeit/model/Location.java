@@ -12,12 +12,12 @@ public class Location extends DataObject {
     public CartesianCoordinate cartesianCoordinate;
 
     public Location(){
-        this.cartesianCoordinate = new CartesianCoordinate();//standart coordinates (0,0,0) since there is no UI for coordinate input
+        this.cartesianCoordinate = CartesianCoordinate.getOrCreateCartesianCoordinate();//standart coordinates (0,0,0) since there is no UI for coordinate input
         incWriteCount();
     }
 
     public Location(double x, double y, double z){
-        this.cartesianCoordinate = new CartesianCoordinate(x, y, z);
+        this.cartesianCoordinate = CartesianCoordinate.getOrCreateCartesianCoordinate(x, y, z);
         incWriteCount();
     }
 
@@ -35,7 +35,7 @@ public class Location extends DataObject {
     }
 
     public void readFrom(ResultSet rset) throws SQLException {
-        this.cartesianCoordinate.readFrom(rset);
+        //this.cartesianCoordinate.readFrom(rset);
     }
 
     @Override

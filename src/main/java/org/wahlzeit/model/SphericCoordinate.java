@@ -28,7 +28,37 @@ import java.sql.SQLException;
 
 public class SphericCoordinate extends AbstractCoordinate{
 
-    private double radius, theta, phi;
+    private final double radius, theta, phi;
+
+    /**
+     * Value Object Representation and Sharing Values in AbstractCoordinate
+     * @methodtype
+     * @return If Coordinate with the values radius, theta, phi already exists returns that specific SphericCoordinate, else
+     *         returns new SphericCoordinate
+     */
+    public static SphericCoordinate getOrCreateSphericCoordinate(double radius, double theta, double phi){
+        if(phi > Math.PI * 2) throw new IllegalArgumentException("Theta must be between 0 and 2 * PI");
+        if(theta > Math.PI) throw new IllegalArgumentException("Theta must be between 0 and PI");
+        if(radius < 0) throw new IllegalArgumentException("radius must be >= 0");
+
+        SphericCoordinate cc = new SphericCoordinate(radius, theta, phi);
+        Coordinate coordinateAlreadyStored = coordinates.putIfAbsent(cc.hashCode(), cc);
+        if (coordinateAlreadyStored == null){
+            //no coordinate stored for this key yet --> creates coordinate, stores it and returns
+            return cc;
+        }
+        return coordinates.get(cc.hashCode()).asSphericCoordinate();
+    }
+
+    /**
+     * Value Object Representation and Sharing Values in AbstractCoordinate
+     * @methodtype
+     * @return If Coordinate with the values x, y, z already exists returns that specific CartesianCoordinate, else
+     *         returns new CartesianCoordinate
+     */
+    public static SphericCoordinate getOrCreateSphericCoordinate(){
+        return getOrCreateSphericCoordinate(0.0, 0.0, 0.0);
+    }
 
     /**
      * Physical Representation of SphericCoordinate
@@ -38,10 +68,8 @@ public class SphericCoordinate extends AbstractCoordinate{
      *
      * @methodtype constructor
      */
-    public SphericCoordinate(){
-        setRadius(0.0);
-        setTheta(0.0);
-        setPhi(0.0);
+    private SphericCoordinate(){
+        this(0.0, 0.0, 0.0);
     }
 
     /**
@@ -52,35 +80,12 @@ public class SphericCoordinate extends AbstractCoordinate{
      * @throws IllegalArgumentException if argument was not a valid double argument for the given radius, theta or phi
      * @methodtype constructor
      */
-    public SphericCoordinate(double radius, double theta, double phi){
-        setRadius(radius);
-        setTheta(theta);
-        setPhi(phi);
-    }
-
-    /**
-     * @methodtype set
-     */
-    public void setPhi(double phi) {
-        if(phi > Math.PI * 2) throw new IllegalArgumentException("Theta must be between 0 and 2 * PI");
+    private SphericCoordinate(double radius, double theta, double phi){
+        this.radius = radius;
+        this.theta = theta;
         this.phi = phi;
     }
 
-    /**
-     * @methodtype set
-     */
-    public void setTheta(double theta) {
-        if(theta > Math.PI) throw new IllegalArgumentException("Theta must be between 0 and PI");
-        this.theta = theta;
-    }
-
-    /**
-     * @methodtype set
-     */
-    public void setRadius(double radius) {
-        if(radius < 0) throw new IllegalArgumentException("radius must be >= 0");
-        this.radius = radius;
-    }
 
     /**
      * @methodtype get
@@ -108,10 +113,12 @@ public class SphericCoordinate extends AbstractCoordinate{
     public void readFrom(ResultSet resultSet) throws SQLException {
         assertClassInvariants();
         assertIsNotNull(resultSet);
-        this.setPhi(resultSet.getDouble("coordinate_phi"));
-        this.setTheta(resultSet.getDouble("coordinate_theta"));
-        this.setRadius(resultSet.getDouble("coordinate_radius"));
+        double phi = resultSet.getDouble("coordinate_phi");
+        double theta = resultSet.getDouble("coordinate_theta");
+        double radius = resultSet.getDouble("coordinate_radius");
+        SphericCoordinate newSphericCoordinate = getOrCreateSphericCoordinate(radius, theta, phi);
         assertClassInvariants();
+        throw new NoSuchMethodError("Methode worked fine but no Returntype is declared and able to be declared. This method is not supported in Value Object Representation of SphericCoordinate");
     }
 
 
@@ -142,7 +149,7 @@ public class SphericCoordinate extends AbstractCoordinate{
         double x = this.getRadius() * x_sin * x_cos;
         double y = this.getRadius() * Math.sin(this.getTheta()) * Math.sin(this.getPhi());
         double z = this.getRadius() * Math.cos(this.getTheta());
-        CartesianCoordinate cartesianCoordinate = new CartesianCoordinate(x, y, z);
+        CartesianCoordinate cartesianCoordinate = CartesianCoordinate.getOrCreateCartesianCoordinate(x, y, z);
         assertIsNotNull(cartesianCoordinate);
         assertClassInvariants();
         return cartesianCoordinate;

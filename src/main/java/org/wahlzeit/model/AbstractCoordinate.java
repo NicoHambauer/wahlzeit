@@ -27,8 +27,13 @@ import org.wahlzeit.utils.UncheckedCoordinateException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public abstract class AbstractCoordinate extends DataObject implements Coordinate{
+
+
+    //Value Object Representation and Sharing Values
+    public static HashMap<Integer, Coordinate> coordinates = new HashMap<>();
 
     public abstract CartesianCoordinate asCartesianCoordinate();
 
@@ -160,6 +165,7 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
         assertClassInvariants();
         return hc;
     }
+
 
     /**
      *

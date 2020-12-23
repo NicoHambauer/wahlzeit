@@ -17,7 +17,7 @@ public class SphericCoordinateTest {
     @Before //each
     public void init() {
         //arrange
-        co = new SphericCoordinate();//origin quals (0,0,0)
+        co = SphericCoordinate.getOrCreateSphericCoordinate();//origin quals (0,0,0)
     }
     @Test
     public void testSuperClass(){
@@ -26,7 +26,7 @@ public class SphericCoordinateTest {
 
     @Test
     public void testConstructor(){
-        co = new SphericCoordinate(10.0,(Math.PI / 2.0) * (1.0/3.0),(Math.PI / 2.0) * (2.0/3.0));
+        co = SphericCoordinate.getOrCreateSphericCoordinate(10.0,(Math.PI / 2.0) * (1.0/3.0),(Math.PI / 2.0) * (2.0/3.0));
         //act
         double diff_r = Math.abs(co.getRadius() - 10.0);
         double diff_t = Math.abs(co.getTheta() - (Math.PI / 2.0) * (1.0/3.0));
@@ -39,18 +39,18 @@ public class SphericCoordinateTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testConstructorIllegalTheta(){
-        co = new SphericCoordinate(10.0, Math.PI * 1.5 , 0.0);
+        co = SphericCoordinate.getOrCreateSphericCoordinate(10.0, Math.PI * 1.5 , 0.0);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testConstructorIllegalPhi(){
-        co = new SphericCoordinate(10.0, 0.0 , Math.PI * 3);
+        co = SphericCoordinate.getOrCreateSphericCoordinate(10.0, 0.0 , Math.PI * 3);
     }
 
     @Test
     public void testDistance(){
         //arrange also see init
-        other_co = new SphericCoordinate(5.0, (Math.PI / 2.0) * (2.0/3.0), 0.0);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(5.0, (Math.PI / 2.0) * (2.0/3.0), 0.0);
         //act
         double distance = 0.0;
         try{
@@ -65,7 +65,7 @@ public class SphericCoordinateTest {
     @Test
     public void testCartesianConversion(){
         //arrange
-        other_co = new SphericCoordinate(5.0, 0.927295218, Math.PI / 2.0);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(5.0, 0.927295218, Math.PI / 2.0);
         //act
         CartesianCoordinate coordinate = co.asCartesianCoordinate();
         CartesianCoordinate other_coordinate = other_co.asCartesianCoordinate();
@@ -82,7 +82,7 @@ public class SphericCoordinateTest {
     @Test
     public void testSphericConversion(){
         //arrange
-        other_co = new SphericCoordinate(5.0, Math.toRadians(60.0), Math.PI / 2.0);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(5.0, Math.toRadians(60.0), Math.PI / 2.0);
         //act
         SphericCoordinate same_coordinate = other_co.asSphericCoordinate();
         //assert
@@ -93,8 +93,8 @@ public class SphericCoordinateTest {
     @Test
     public void testCentralAngle(){
         //arrange
-        other_co = new SphericCoordinate(9.0, Math.toRadians(35.0), Math.PI / 2.0);
-        SphericCoordinate second_co = new SphericCoordinate(9.0, Math.toRadians(30.0), Math.PI * 1.5);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(9.0, Math.toRadians(35.0), Math.PI / 2.0);
+        SphericCoordinate second_co = SphericCoordinate.getOrCreateSphericCoordinate(9.0, Math.toRadians(30.0), Math.PI * 1.5);
         double central_angle = 0.0;
         try{
             central_angle = other_co.getCentralAngle(second_co);
@@ -106,10 +106,10 @@ public class SphericCoordinateTest {
 
     @Test
     public void testEquals(){
-        other_co = new SphericCoordinate(0, 0, 0);
-        SphericCoordinate c3 = new SphericCoordinate(7.5, Math.toRadians(45.0), Math.toRadians(30.0));
-        SphericCoordinate c4 = new SphericCoordinate(7.5, Math.toRadians(45.0), Math.toRadians(30.0));
-        SphericCoordinate c5 = new SphericCoordinate(4.0, Math.toRadians(60.0), Math.toRadians(90.0));
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(0, 0, 0);
+        SphericCoordinate c3 = SphericCoordinate.getOrCreateSphericCoordinate(7.5, Math.toRadians(45.0), Math.toRadians(30.0));
+        SphericCoordinate c4 = SphericCoordinate.getOrCreateSphericCoordinate(7.5, Math.toRadians(45.0), Math.toRadians(30.0));
+        SphericCoordinate c5 = SphericCoordinate.getOrCreateSphericCoordinate(4.0, Math.toRadians(60.0), Math.toRadians(90.0));
         //assert
         assertTrue(co.equals(other_co));
         assertTrue(c3.equals(c4));
@@ -118,19 +118,19 @@ public class SphericCoordinateTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalPhi(){
-        other_co = new SphericCoordinate(0, 0, 2.1 * Math.PI);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(0, 0, 2.1 * Math.PI);
         //assert
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalTheta(){
-        other_co = new SphericCoordinate(0, 1.1 * Math.PI, 0.0);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(0, 1.1 * Math.PI, 0.0);
         //assert
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalRadius(){
-        other_co = new SphericCoordinate(-5.0, 0.0, 0.0);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(-5.0, 0.0, 0.0);
         //assert
     }
 
@@ -145,8 +145,7 @@ public class SphericCoordinateTest {
     @Test (expected = UncheckedCoordinateException.class)
     public void testUncheckedCoordinateException(){
         //arrange
-        other_co = new SphericCoordinate(0, 0.8 * Math.PI, 0.0);
-        other_co.setPhi(Double.NaN);
+        other_co = SphericCoordinate.getOrCreateSphericCoordinate(0, Double.NaN, 0.0);
         //act
         double centralAngle = co.doGetCentralAngle(other_co);
     }

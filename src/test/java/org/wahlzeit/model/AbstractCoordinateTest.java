@@ -103,8 +103,9 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
     //Stubs for testing
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        return new CartesianCoordinate(){
+        return new CartesianCoordinate() {
             //stub with stub methods
+
             public double doGetDistance(CartesianCoordinate other_cartesian_Coordinate){
                 if(testException){
                     throw new UncheckedCoordinateException("doGetDistance failed");
@@ -120,6 +121,8 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
                 return to_be_equals;
             }
         };
+
+
     }
 
     @Override
