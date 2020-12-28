@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.mockito.Mockito.*;
+
 public class AbstractCoordinateTest extends AbstractCoordinate {
 
     public AbstractCoordinate abs_co1;
@@ -103,39 +105,31 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
     //Stubs for testing
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        return new CartesianCoordinate() {
-            //stub with stub methods
+        //Using Mockito, see imports/dependencies from build.gradle: testCompile 'org.mockito:mockito-core:2.+'
+        CartesianCoordinate cartesianMock = mock(CartesianCoordinate.class);
 
-            public double doGetDistance(CartesianCoordinate other_cartesian_Coordinate){
-                if(testException){
-                    throw new UncheckedCoordinateException("doGetDistance failed");
-                }
-
-                return to_be_distance;
-            }
-
-            public boolean doIsEqual(CartesianCoordinate other_cartesianCoordinate){
-                if(testException){
-                    throw new UncheckedCoordinateException("diIsEqual went wrong");
-                }
-                return to_be_equals;
-            }
-        };
-
-
+        if(testException){
+            doThrow(new UncheckedCoordinateException("doGetDistance failed")).when(cartesianMock.doGetDistance(any(CartesianCoordinate.class)));
+            doThrow(new UncheckedCoordinateException("diIsEqual went wrong")).when(cartesianMock.doIsEqual(any(CartesianCoordinate.class)));
+        } else {
+            when(cartesianMock.doGetDistance(any(CartesianCoordinate.class))).thenReturn(to_be_distance);
+            when(cartesianMock.doIsEqual(any(CartesianCoordinate.class))).thenReturn(to_be_equals);
+        }
+        return cartesianMock;
     }
 
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        return new SphericCoordinate(){
-            //stub with stub methods
-            public double doGetCentralAngle(SphericCoordinate other_spheric_Coordinate){
-                if(testException){
-                    throw new UncheckedCoordinateException("doGetCentralAngle failed");
-                }
-                return to_be_central_angle;
-            }
-        };
+        //Using Mockito, see imports/dependencies from build.gradle: testCompile 'org.mockito:mockito-core:2.+'
+        SphericCoordinate sphericMock = mock(SphericCoordinate.class);
+
+        if(testException){
+            doThrow(new UncheckedCoordinateException("doGetCentralAngle failed")).when(sphericMock.doGetCentralAngle(any(SphericCoordinate.class)));
+        } else {
+            when(sphericMock.doGetCentralAngle(any(SphericCoordinate.class))).thenReturn(to_be_central_angle);
+        }
+
+        return sphericMock;
     }
 
     //Other Methods not important, since they ar Subclass specific and abstract in AbstractCoordinate

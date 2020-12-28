@@ -23,6 +23,7 @@ import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import javax.mail.MethodNotSupportedException;
+import javax.xml.namespace.QName;
 import java.awt.geom.Arc2D;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
