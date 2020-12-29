@@ -208,9 +208,12 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
     }
 
     private void assertIsValidHashCode(int hc){
+        //All HashCodes even negative ones are valid
+        /*
         if(hc < 0){
             throw new UncheckedCoordinateException("HashCode invalid (<0), was:" + hc);
         }
+        */
     }
 
 }

@@ -109,8 +109,8 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
         CartesianCoordinate cartesianMock = mock(CartesianCoordinate.class);
 
         if(testException){
-            doThrow(new UncheckedCoordinateException("doGetDistance failed")).when(cartesianMock.doGetDistance(any(CartesianCoordinate.class)));
-            doThrow(new UncheckedCoordinateException("diIsEqual went wrong")).when(cartesianMock.doIsEqual(any(CartesianCoordinate.class)));
+            when(cartesianMock.doGetDistance(any(CartesianCoordinate.class))).thenThrow(new UncheckedCoordinateException("doGetDistance failed"));
+            when(cartesianMock.doIsEqual(any(CartesianCoordinate.class))).thenThrow(new UncheckedCoordinateException("diIsEqual went wrong"));
         } else {
             when(cartesianMock.doGetDistance(any(CartesianCoordinate.class))).thenReturn(to_be_distance);
             when(cartesianMock.doIsEqual(any(CartesianCoordinate.class))).thenReturn(to_be_equals);
@@ -124,7 +124,7 @@ public class AbstractCoordinateTest extends AbstractCoordinate {
         SphericCoordinate sphericMock = mock(SphericCoordinate.class);
 
         if(testException){
-            doThrow(new UncheckedCoordinateException("doGetCentralAngle failed")).when(sphericMock.doGetCentralAngle(any(SphericCoordinate.class)));
+            when(sphericMock.doGetCentralAngle(any(SphericCoordinate.class))).thenThrow(new UncheckedCoordinateException("doGetCentralAngle failed"));
         } else {
             when(sphericMock.doGetCentralAngle(any(SphericCoordinate.class))).thenReturn(to_be_central_angle);
         }

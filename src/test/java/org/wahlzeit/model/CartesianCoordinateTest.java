@@ -33,7 +33,7 @@ public class CartesianCoordinateTest {
     }
 
     @Test
-    public void testConstructor(){
+    public void testCreation(){
         //arrange
         co = CartesianCoordinate.getOrCreateCartesianCoordinate(10.0, 10.0, 10.0);
         //act
@@ -61,19 +61,16 @@ public class CartesianCoordinateTest {
     }
 
     @Test
-    public void testSetMethods(){
+    public void testGetOrCreateUsesShared(){
         //arrange
         //act
-        co.setX(10.0);
-        co.setY(20.0);
-        co.setZ(5.0);
-        double diff_x = Math.abs(co.getX() - 10.0);
-        double diff_y = Math.abs(co.getY() - 20.0);
-        double diff_z = Math.abs(co.getZ() - 5.0);
+        co = CartesianCoordinate.getOrCreateCartesianCoordinate(10.0, 20.0, 5.0);
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(10.0, 20.0, 5.0);
+
         //assert
-        assertTrue(diff_x <= max_diff);
-        assertTrue(diff_y <= max_diff);
-        assertTrue(diff_z <= max_diff);
+        //since ValueObjects are shared they also share the same reference
+        assertTrue(co.equals(other_co));
+
     }
 
     @Test
@@ -93,6 +90,17 @@ public class CartesianCoordinateTest {
     }
 
     @Test
+    public void testAsCartesianCoordinate(){
+        //arrange
+        co = CartesianCoordinate.getOrCreateCartesianCoordinate(3.0, 3.0, 1.5);
+        //act
+
+        //assert
+        assertSame(co, co.asCartesianCoordinate());
+
+    }
+
+    @Test
     public void testEqualsSimple(){
         //arrange
         other_co = CartesianCoordinate.getOrCreateCartesianCoordinate();
@@ -105,11 +113,9 @@ public class CartesianCoordinateTest {
     @Test
     public void testEquals(){
         //arrange
+        co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0, 1.0, 1.0);
         other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0,1.0,1.0);
         //act
-        co.setX(1.0);
-        co.setY(1.0);
-        co.setZ(1.0);
         //assert
         assertTrue(co.equals(other_co));
 
@@ -118,11 +124,9 @@ public class CartesianCoordinateTest {
     @Test
     public void testHashCode(){
         //arrange
+        co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0, 1.0, 1.0);
         other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0,1.0,1.0);
         //act
-        co.setX(1.0);
-        co.setY(1.0);
-        co.setZ(1.0);
         //assert
         assertEquals(co.hashCode(), other_co.hashCode());
 
@@ -133,9 +137,6 @@ public class CartesianCoordinateTest {
         //arrange
         other_co = null;
         //act
-        co.setX(1.0);
-        co.setY(1.0);
-        co.setZ(1.0);
         //test/assert
         co.equals(other_co);
 
@@ -144,12 +145,8 @@ public class CartesianCoordinateTest {
     @Test (expected = UncheckedCoordinateException.class)
     public void testUncheckedCoordinateException(){
         //arrange
-        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(1.0,1.0,1.0);
+        other_co = CartesianCoordinate.getOrCreateCartesianCoordinate(Double.NaN,1.0,1.0);
         //act
-        co.setX(1.0);
-        co.setY(1.0);
-        co.setZ(1.0);
-        other_co.setX(Double.NaN);
         //test/assert
         co.equals(other_co);
 

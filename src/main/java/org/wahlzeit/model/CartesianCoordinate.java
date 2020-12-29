@@ -19,12 +19,8 @@
  */
 
 package org.wahlzeit.model;
-import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.UncheckedCoordinateException;
 
-import javax.mail.MethodNotSupportedException;
-import javax.xml.namespace.QName;
-import java.awt.geom.Arc2D;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.PreparedStatement;
@@ -44,7 +40,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
      */
     public static CartesianCoordinate getOrCreateCartesianCoordinate(double x, double y, double z){
         CartesianCoordinate cc = new CartesianCoordinate(x, y, z);
-        Coordinate coordinateAlreadyStored = coordinates.putIfAbsent(cc.hashCode(), cc);
+        Coordinate coordinateAlreadyStored = coordinates.put(cc.hashCode(), cc);
         if (coordinateAlreadyStored == null){
             //no coordinate stored for this key yet --> creates coordinate
             return cc;
@@ -95,6 +91,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
         assertClassInvariants();
         return z;
     }
+
 
     @Override
     public void writeOn(ResultSet rset) throws SQLException {
@@ -176,7 +173,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
 
         double distance = Math.sqrt((x_vec * x_vec) + (y_vec * y_vec) + (z_vec * z_vec));
         assertClassInvariants();
-        asserIsValidDouble(distance);
+        assertIsValidDouble(distance);
         return distance;
     }
 
@@ -221,7 +218,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @throws UncheckedCoordinateException
      */
-    private void asserIsValidDouble(double d){
+    private void assertIsValidDouble(double d){
         if(Double.isNaN(d)){
             throw new UncheckedCoordinateException("Double Value calculated was NaN");
         }

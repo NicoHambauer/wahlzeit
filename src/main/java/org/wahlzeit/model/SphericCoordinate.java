@@ -41,13 +41,14 @@ public class SphericCoordinate extends AbstractCoordinate{
         if(theta > Math.PI) throw new IllegalArgumentException("Theta must be between 0 and PI");
         if(radius < 0) throw new IllegalArgumentException("radius must be >= 0");
 
-        SphericCoordinate cc = new SphericCoordinate(radius, theta, phi);
-        Coordinate coordinateAlreadyStored = coordinates.putIfAbsent(cc.hashCode(), cc);
+        SphericCoordinate sc = new SphericCoordinate(radius, theta, phi);
+        int hc = sc.hashCode();
+        Coordinate coordinateAlreadyStored = coordinates.put(hc, sc);//TODO
         if (coordinateAlreadyStored == null){
             //no coordinate stored for this key yet --> creates coordinate, stores it and returns
-            return cc;
+            return sc;
         }
-        return coordinates.get(cc.hashCode()).asSphericCoordinate();
+        return coordinates.get(hc).asSphericCoordinate();
     }
 
     /**
