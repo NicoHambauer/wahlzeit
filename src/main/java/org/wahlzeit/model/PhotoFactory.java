@@ -23,15 +23,32 @@ package org.wahlzeit.model;
 import java.sql.*;
 
 import org.wahlzeit.services.*;
+import org.wahlzeit.utils.DesignPatternInstance;
 
 /**
  * An Abstract Factory for creating photos and related objects.
  */
+@DesignPatternInstance(
+		purpose = "Creational",
+		scope = "Object",
+		patternName = "Abtract Factory",
+		patternParticipants = {"Abstract Factory", "Concrete Factory", "Abstract Product", "Concrete Product"},
+		instanceParticipants = {"PhotoFactory", "RealEstatePhotoFactory", "Photo", "RealEstatePhoto"},
+		roleOfAnnotatedClass = "Abstract Factory"
+)
 public class PhotoFactory {
 	
 	/**
 	 * Hidden singleton instance; needs to be initialized from the outside.
 	 */
+	@DesignPatternInstance(
+			purpose = "Creational",
+			scope = "Object",
+			patternName = "Singleton",
+			patternParticipants = {"Singleton"},
+			instanceParticipants = {"PhotoFactory"},
+			roleOfAnnotatedClass = "Singleton"
+	)
 	private static PhotoFactory instance = null;
 	
 	/**
@@ -81,6 +98,14 @@ public class PhotoFactory {
 	/**
 	 * 
 	 */
+	@DesignPatternInstance(
+			purpose = "Creational",
+			scope = "Class",
+			patternName = "Factory Method",
+			patternParticipants = { "Creator", "Concrete Creator", "Product", "Concrete Product"},
+			instanceParticipants = { "PhotoFactory", "RealEstatePhotoFactory", "Photo", "RealEstatePhoto"},
+			roleOfAnnotatedClass = "Creator"
+	)
 	public Photo createPhoto(PhotoId id) {
 		return new Photo(id);
 	}
@@ -88,6 +113,14 @@ public class PhotoFactory {
 	/**
 	 * 
 	 */
+	@DesignPatternInstance(
+			purpose = "Creational",
+			scope = "Class",
+			patternName = "Factory Method",
+			patternParticipants = { "Creator", "Concrete Creator", "Product", "Concrete Product"},
+			instanceParticipants = { "PhotoFactory", "RealEstatePhotoFactory", "Photo", "RealEstatePhoto"},
+			roleOfAnnotatedClass = "Creator"
+	)
 	public Photo createPhoto(ResultSet rs) throws SQLException {
 		return new Photo(rs);
 	}

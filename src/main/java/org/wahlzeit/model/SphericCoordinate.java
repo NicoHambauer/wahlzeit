@@ -20,6 +20,7 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.utils.DesignPatternInstance;
 import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import java.sql.PreparedStatement;
@@ -162,6 +163,14 @@ public class SphericCoordinate extends AbstractCoordinate{
         return this;
     }
 
+    @DesignPatternInstance(
+            purpose = "Behavioral",
+            scope = "Class",
+            patternName = "Template Method",
+            patternParticipants = {"Abstract Class", "Concrete Class"},
+            instanceParticipants = {"AbstractCoordinate", "SphericCoordinate"},
+            roleOfAnnotatedClass = "Concrete Class"
+    )
     public double doGetCentralAngle(SphericCoordinate other_spheric_coordinate) {
         assertClassInvariants();
         assertIsNotNull(other_spheric_coordinate);

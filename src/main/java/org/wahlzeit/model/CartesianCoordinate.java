@@ -19,6 +19,7 @@
  */
 
 package org.wahlzeit.model;
+import org.wahlzeit.utils.DesignPatternInstance;
 import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import java.math.BigDecimal;
@@ -163,6 +164,14 @@ public class CartesianCoordinate extends AbstractCoordinate {
         return sphericCoordinate;
     }
 
+    @DesignPatternInstance(
+            purpose = "Behavioral",
+            scope = "Class",
+            patternName = "Template Method",
+            patternParticipants = {"Abstract Class", "Concrete Class"},
+            instanceParticipants = {"AbstractCoordinate", "CartesianCoordinate"},
+            roleOfAnnotatedClass = "Concrete Class"
+    )
     protected double doGetDistance(CartesianCoordinate cartesianCoordinate){
         assertClassInvariants();
         assertIsNotNull(cartesianCoordinate);

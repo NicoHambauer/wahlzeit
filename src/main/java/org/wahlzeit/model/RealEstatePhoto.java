@@ -2,11 +2,20 @@ package org.wahlzeit.model;
 
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.Language;
+import org.wahlzeit.utils.DesignPatternInstance;
 import org.wahlzeit.utils.StringUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@DesignPatternInstance(
+        purpose = "Creational",
+        scope = "Object",
+        patternName = "Abtract Factory",
+        patternParticipants = {"Abstract Factory", "Concrete Factory", "Abstract Product", "Concrete Product"},
+        instanceParticipants = {"PhotoFactory", "RealEstatePhotoFactory", "Photo", "RealEstatePhoto"},
+        roleOfAnnotatedClass = "Concrete Product"
+)
 public class RealEstatePhoto extends Photo {
 
     protected int rooms = 5;

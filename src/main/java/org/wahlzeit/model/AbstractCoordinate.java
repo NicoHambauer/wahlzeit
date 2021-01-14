@@ -22,6 +22,7 @@ package org.wahlzeit.model;
 
 import org.wahlzeit.services.DataObject;
 import org.wahlzeit.utils.CheckedCoordinateException;
+import org.wahlzeit.utils.DesignPatternInstance;
 import org.wahlzeit.utils.UncheckedCoordinateException;
 
 import java.sql.PreparedStatement;
@@ -52,6 +53,14 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
      * @return cartesian Distance from  this coordinate to other coordinate
      */
     @Override
+    @DesignPatternInstance(
+            purpose = "Behavioral",
+            scope = "Class",
+            patternName = "Template Method",
+            patternParticipants = {"Abstract Class", "Concrete Class"},
+            instanceParticipants = {"AbstractCoordinate", "CartesianCoordinate"},
+            roleOfAnnotatedClass = "Abstract Class"
+    )
     public double getCartesianDistance(Coordinate other_Coordinate) throws CheckedCoordinateException {
         assertClassInvariants();
         assertIsValidCoordinate(other_Coordinate);
@@ -79,6 +88,14 @@ public abstract class AbstractCoordinate extends DataObject implements Coordinat
      * @return central angle in range 0 and 2*PI from this coordinate to other coordinate
      */
     @Override
+    @DesignPatternInstance(
+            purpose = "Behavioral",
+            scope = "Class",
+            patternName = "Template Method",
+            patternParticipants = {"Abstract Class", "Concrete Class"},
+            instanceParticipants = {"AbstractCoordinate", "SphericCoordinate"},
+            roleOfAnnotatedClass = "Abstract Class"
+    )
     public double getCentralAngle(Coordinate other_Coordinate) throws CheckedCoordinateException {
         assertClassInvariants();
         assertIsValidCoordinate(other_Coordinate);
