@@ -21,7 +21,6 @@
 package org.wahlzeit.model;
 import org.wahlzeit.utils.DesignPatternInstance;
 import org.wahlzeit.utils.UncheckedCoordinateException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.PreparedStatement;
