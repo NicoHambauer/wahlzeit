@@ -18,6 +18,9 @@ import java.sql.SQLException;
 )
 public class RealEstatePhoto extends Photo {
 
+    RealEstate building;
+    RealEstatePhotoManager manager;
+
     protected int rooms = 5;
     protected int bathrooms = 2;
     protected int year_built = 1996;
