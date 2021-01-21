@@ -22,11 +22,13 @@ package org.wahlzeit.model;
 
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class RealEstateType {
 
     RealEstateManager manager;
+
     RealEstateType superType;
     HashSet<RealEstateType> subtypes;
 
@@ -64,12 +66,57 @@ public class RealEstateType {
         }
     }
 
-    public RealEstate createInstance(RealEstatePhoto[] realEstatePhotos, RealEstateManager manager){
+    public RealEstateType(RealEstateManager manager, String typeName){
+        this.manager = manager;
+        this.typeName = typeName;
+    }
+
+    public RealEstate createInstance(HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         return new RealEstate(this, realEstatePhotos, manager);
     }
 
+    public void addSubType(RealEstateType type) {
+        if (type == null) throw new IllegalArgumentException("Argument was null");
+        type.setSuperType(this);
+        subtypes.add(type);
+    }
+
     public boolean isSubtype(RealEstateType otherType){
-        return this.subtypes.contains(otherType);
+        if(this.superType.equals(otherType)){
+            //without rolling back recursion this is the base case and its not this.equals(otherType) !
+            return true;
+        }
+
+        return this.superType.isSubtype(otherType);
+    }
+
+    public Iterator<RealEstateType> getSubTypeIterator() {
+        return subtypes.iterator();
+    }
+
+    public boolean hasInstance(RealEstate realEstate) {
+        if(realEstate == null) throw new IllegalArgumentException("Real Estate was null");
+        if (realEstate.getType() == this) {
+            return true;
+        }
+
+        for (RealEstateType type : this.subtypes) {
+            if (type.hasInstance(realEstate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public RealEstateType getSuperType() {
+        return superType;
+    }
+
+    public void setSuperType(RealEstateType superType) {
+        this.superType = superType;
     }
 
     public String getMake() {

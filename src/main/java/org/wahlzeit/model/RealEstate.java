@@ -20,21 +20,40 @@
 
 package org.wahlzeit.model;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 public class RealEstate {
 
-    RealEstatePhoto[] realEstatePhotos;
+    HashSet<RealEstatePhoto> realEstatePhotos = new HashSet<>();
     RealEstateManager manager;
+
     protected RealEstateType type = null;
 
-    public RealEstate(RealEstateType type, RealEstatePhoto[] realEstatePhotos, RealEstateManager manager){
+    public RealEstate(RealEstateType type, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         this.type = type;
-        this.realEstatePhotos = realEstatePhotos;
+        this.realEstatePhotos.addAll(realEstatePhotos);
         this.manager = manager;
     }
 
     public int getID(){
         return Objects.hash(this.type, this.realEstatePhotos);
     }
+
+    public HashSet<RealEstatePhoto> getRealEstatePhotos() {
+        return realEstatePhotos;
+    }
+
+    public void addRealEstatePhoto(RealEstatePhoto realEstatePhoto) {
+        this.realEstatePhotos = realEstatePhotos;
+    }
+
+    public RealEstateType getType() {
+        return type;
+    }
+
+    public void setType(RealEstateType type) {
+        this.type = type;
+    }
+
 }

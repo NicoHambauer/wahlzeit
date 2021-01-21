@@ -21,6 +21,7 @@
 package org.wahlzeit.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class RealEstateManager {
 
@@ -31,18 +32,35 @@ public class RealEstateManager {
         //
     }
 
-    public RealEstate getOrCreateRealEstate(String typeName, RealEstateType superType, RealEstateType[] subtypes, RealEstatePhoto[] realEstatePhotos, RealEstateManager manager){
+    public RealEstate getOrCreateRealEstate(String typeName, RealEstateType superType, RealEstateType[] subtypes, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         RealEstateType type = getOrCreateRealEstateType(typeName, superType, subtypes);
         RealEstate newRealEstate = type.createInstance(realEstatePhotos, manager);
         realEstateInstances.put(newRealEstate.getID(), newRealEstate);
         return newRealEstate;
     }
 
+    public RealEstate getOrCreateRealEstate(String typeName, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
+        RealEstateType type = getOrCreateRealEstateType(typeName);
+        RealEstate newRealEstate = type.createInstance(realEstatePhotos, manager);
+        realEstateInstances.put(newRealEstate.getID(), newRealEstate);
+        return newRealEstate;
+    }
+
+
     private RealEstateType getOrCreateRealEstateType(String typeName, RealEstateType superType, RealEstateType[] subtypes){
         if(realEstateTypes.containsKey(typeName.hashCode())){
             return realEstateTypes.get(typeName.hashCode());
         }
         RealEstateType newType = new RealEstateType(this, typeName, superType, subtypes);
+        realEstateTypes.put(typeName.hashCode(), newType);
+        return newType;
+    }
+
+    private RealEstateType getOrCreateRealEstateType(String typeName){
+        if(realEstateTypes.containsKey(typeName.hashCode())){
+            return realEstateTypes.get(typeName.hashCode());
+        }
+        RealEstateType newType = new RealEstateType(this, typeName);
         realEstateTypes.put(typeName.hashCode(), newType);
         return newType;
     }
