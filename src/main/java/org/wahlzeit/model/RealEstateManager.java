@@ -29,10 +29,11 @@ public class RealEstateManager {
     HashMap<Integer, RealEstateType> realEstateTypes = new HashMap<>();
 
     public RealEstateManager(){
-        //
+        //default Constructor
     }
 
     public RealEstate getOrCreateRealEstate(String typeName, RealEstateType superType, RealEstateType[] subtypes, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
+        assertClassInvariants();
         RealEstateType type = getOrCreateRealEstateType(typeName, superType, subtypes);
         RealEstate newRealEstate = type.createInstance(realEstatePhotos, manager);
         realEstateInstances.put(newRealEstate.getID(), newRealEstate);
@@ -40,6 +41,7 @@ public class RealEstateManager {
     }
 
     public RealEstate getOrCreateRealEstate(String typeName, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
+        assertClassInvariants();
         RealEstateType type = getOrCreateRealEstateType(typeName);
         RealEstate newRealEstate = type.createInstance(realEstatePhotos, manager);
         realEstateInstances.put(newRealEstate.getID(), newRealEstate);
@@ -48,21 +50,27 @@ public class RealEstateManager {
 
 
     private RealEstateType getOrCreateRealEstateType(String typeName, RealEstateType superType, RealEstateType[] subtypes){
+        assertClassInvariants();
         if(realEstateTypes.containsKey(typeName.hashCode())){
             return realEstateTypes.get(typeName.hashCode());
         }
-        RealEstateType newType = new RealEstateType(this, typeName, superType, subtypes);
+        RealEstateType newType = new RealEstateType(typeName, this, superType, subtypes);
         realEstateTypes.put(typeName.hashCode(), newType);
         return newType;
     }
 
     private RealEstateType getOrCreateRealEstateType(String typeName){
+        assertClassInvariants();
         if(realEstateTypes.containsKey(typeName.hashCode())){
             return realEstateTypes.get(typeName.hashCode());
         }
-        RealEstateType newType = new RealEstateType(this, typeName);
+        RealEstateType newType = new RealEstateType(typeName, this);
         realEstateTypes.put(typeName.hashCode(), newType);
         return newType;
+    }
+
+    private void assertClassInvariants(){
+        if(this.realEstateInstances == null || this.realEstateTypes == null) throw new IllegalStateException("Illegal State of RealEstateManager");
     }
 
 }

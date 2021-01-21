@@ -30,18 +30,20 @@ public class RealEstateType {
     RealEstateManager manager;
 
     RealEstateType superType;
-    HashSet<RealEstateType> subtypes;
-
-    String typeName;
-
-
+    HashSet<RealEstateType> subtypes = new HashSet<>();
 
     /**
      * e.g. commercial-building or private-building or land or industrial
      */
+    String typeName;
+
+
+    /**
+     * use-case: e.g. production, service, store, houshold, non profit
+     */
     String make;
     /**
-     * e.g. apartment, villa, maisonette, penthouse, loft, terace-villa
+     * e.g. apartment, villa, maisonette, penthouse, loft, terace-villa, shop, tinyshop, conceptStore,
      */
     String model;
 
@@ -55,7 +57,8 @@ public class RealEstateType {
 
      */
 
-    public RealEstateType(RealEstateManager manager, String typeName, RealEstateType superType, RealEstateType[] subtypes){
+    public RealEstateType(String typeName, RealEstateManager manager , RealEstateType superType, RealEstateType[] subtypes){
+        assertNotNull(typeName);
         this.manager = manager;
         this.typeName = typeName;
         this.superType = superType;
@@ -66,7 +69,8 @@ public class RealEstateType {
         }
     }
 
-    public RealEstateType(RealEstateManager manager, String typeName){
+    public RealEstateType(String typeName, RealEstateManager manager){
+        assertNotNull(typeName);
         this.manager = manager;
         this.typeName = typeName;
     }
@@ -76,14 +80,19 @@ public class RealEstateType {
     }
 
     public void addSubType(RealEstateType type) {
+        assertNotNull(type);
         if (type == null) throw new IllegalArgumentException("Argument was null");
         type.setSuperType(this);
         subtypes.add(type);
     }
 
     public boolean isSubtype(RealEstateType otherType){
-        if(this.superType.equals(otherType)){
-            //without rolling back recursion this is the base case and its not this.equals(otherType) !
+        assertNotNull(otherType);
+        if(this.superType == null){
+            //base case
+            return false;
+        } else if(this.superType.equals(otherType)){
+            //without rolling back recursion this is the second base case and its not this.equals(otherType) !
             return true;
         }
 
@@ -95,7 +104,7 @@ public class RealEstateType {
     }
 
     public boolean hasInstance(RealEstate realEstate) {
-        if(realEstate == null) throw new IllegalArgumentException("Real Estate was null");
+        assertNotNull(realEstate);
         if (realEstate.getType() == this) {
             return true;
         }
@@ -110,12 +119,12 @@ public class RealEstateType {
 
 
 
-
     public RealEstateType getSuperType() {
         return superType;
     }
 
     public void setSuperType(RealEstateType superType) {
+        assertNotNull(superType);
         this.superType = superType;
     }
 
@@ -124,6 +133,7 @@ public class RealEstateType {
     }
 
     public void setMake(String make) {
+        assertNotNull(make);
         this.make = make;
     }
 
@@ -146,5 +156,9 @@ public class RealEstateType {
     @Override
     public int hashCode() {
         return Objects.hash(typeName);
+    }
+
+    private void assertNotNull(Object o){
+        if(o == null) throw new IllegalArgumentException("Argument was Null");
     }
 }

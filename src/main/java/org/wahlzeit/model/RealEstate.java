@@ -32,7 +32,9 @@ public class RealEstate {
 
     public RealEstate(RealEstateType type, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         this.type = type;
-        this.realEstatePhotos.addAll(realEstatePhotos);
+        if(realEstatePhotos != null){
+            this.realEstatePhotos.addAll(realEstatePhotos);
+        }
         this.manager = manager;
     }
 
