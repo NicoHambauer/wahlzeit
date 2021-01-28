@@ -77,6 +77,10 @@ public class RealEstateType {
 
     public RealEstate createInstance(HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         return new RealEstate(this, realEstatePhotos, manager);
+        //Object Creation: This method is called from RealEstateManager#getOrCreateRealEstate()
+        //					So Instantiation Process is as follows: RealEstateManager#getOrCreateRealEstate() --> RealEstateType#createInstance() --> RealEstate#RealEstate()
+        //					(Design) Patterns of Object Creation: "Factory Method/(Abstract) Factory"
+        //                  level (1): Here Constructor is called (Step 2)
     }
 
     public void addSubType(RealEstateType type) {

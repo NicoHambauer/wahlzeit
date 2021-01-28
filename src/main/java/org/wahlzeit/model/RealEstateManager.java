@@ -41,6 +41,11 @@ public class RealEstateManager {
     }
 
     public RealEstate getOrCreateRealEstate(String typeName, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
+        //Object Creation: This method creates/builds RealEstates from "ground up"
+        //					So Instantiation Process is as follows: RealEstateManager#getOrCreateRealEstate() --> RealEstateType#createInstance() --> RealEstate#RealEstate()
+        //					(Design) Patterns of Object Creation: "Factory Method/(Abstract) Factory"
+        //                  level (2): Here Factory Method is called (Step 1)
+
         assertClassInvariants();
         RealEstateType type = getOrCreateRealEstateType(typeName);
         RealEstate newRealEstate = type.createInstance(realEstatePhotos, manager);

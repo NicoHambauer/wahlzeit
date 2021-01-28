@@ -36,6 +36,10 @@ public class RealEstate {
             this.realEstatePhotos.addAll(realEstatePhotos);
         }
         this.manager = manager;
+        //Object Creation: This Constructor is called from RealEstateType#createInstance()
+        //					So Instantiation Process is as follows: RealEstateType#createInstance() --> RealEstate#RealEstate()
+        //					(Design) Patterns of Object Creation: "Factory Method/(Abstract) Factory" ( RealEstateType#createInstance() {... return new RealEstate(..);}
+        //                  Base level (0): Here Object RealEstate is created by constructor (Step 3)
     }
 
     public int getID(){
