@@ -29,6 +29,10 @@ public class RealEstatePhotoFactory extends PhotoFactory {
      */
     public RealEstatePhoto createPhoto() {
         return new RealEstatePhoto();//does not need to be changed to RealEstatePhotoFactory since the method is overwritten
+
+        //Object Creation: (Design) Patterns of Object Creation: "Abstract Factory", which creates a new RealEstatePhoto by this method: RealEstatePhotoFactory#createPhoto()
+        //					So Instantiation Process is as follows: RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+        //                  level (1): Here Object Constructor is called (Step 2)
     }
 
     /**
@@ -36,6 +40,9 @@ public class RealEstatePhotoFactory extends PhotoFactory {
      */
     public RealEstatePhoto createPhoto(PhotoId id) {
         return new RealEstatePhoto(id);
+        //Object Creation: (Design) Patterns of Object Creation: "Abstract Factory", which creates a new RealEstatePhoto by this method: RealEstatePhotoFactory#createPhoto()
+        //					So Instantiation Process is as follows: RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+        //                  level (1): Here Object Constructor is called (Step 2)
     }
 
     /**
@@ -43,6 +50,9 @@ public class RealEstatePhotoFactory extends PhotoFactory {
      */
     public RealEstatePhoto createPhoto(ResultSet rs) throws SQLException {
         return new RealEstatePhoto(rs);
+        //Object Creation: (Design) Patterns of Object Creation: "Abstract Factory", which creates a new RealEstatePhoto by this method: RealEstatePhotoFactory#createPhoto()
+        //					So Instantiation Process is as follows: RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+        //                  level (1): Here Object Constructor is called (Step 2)
     }
 
 }

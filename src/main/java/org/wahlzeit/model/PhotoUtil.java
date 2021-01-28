@@ -37,8 +37,11 @@ public class PhotoUtil {
 	 * 
 	 */
 	public static Photo createPhoto(File source, PhotoId id) throws Exception {
+		//Object Creation: (Design) Patterns of Object Creation: "Abstract Factory"
+		//					So Instantiation Process is as follows: PhotoUtil#createPhoto() --> RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+		//                  level (2): Here Factory Method is Called (Step1)
 		Photo result = PhotoFactory.getInstance().createPhoto(id);
-		
+
 		Image sourceImage = createImageFiles(source, id);
 
 		int sourceWidth = sourceImage.getWidth(null);

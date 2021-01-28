@@ -33,6 +33,10 @@ public class RealEstatePhoto extends Photo {
     public RealEstatePhoto() {
         id = PhotoId.getNextId();
         incWriteCount();
+        //Object Creation: This Constructor is called from RealEstatePhotoFactory#createPhoto()
+        //					So Instantiation Process is as follows: RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+        //					(Design) Patterns of Object Creation: "Abstract Factory" ( RealEstatePhotoFactory#createPhoto() {... return new RealEstatePhoto(..);}
+        //                  Base level (0): Here Object RealEstatePhoto is created by constructor (Step 3)
     }
 
     /**
@@ -42,6 +46,10 @@ public class RealEstatePhoto extends Photo {
     public RealEstatePhoto(PhotoId myId) {
         id = myId;
         incWriteCount();
+        //Object Creation: This Constructor is called from RealEstatePhotoFactory#createPhoto()
+        //					So Instantiation Process is as follows: RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+        //					(Design) Patterns of Object Creation: "Abstract Factory" ( RealEstatePhotoFactory#createPhoto() {... return new RealEstatePhoto(..);}
+        //                  Base level (0): Here Object RealEstatePhoto is created by constructor (Step 3)
     }
 
     /**
@@ -50,6 +58,10 @@ public class RealEstatePhoto extends Photo {
      */
     public RealEstatePhoto(ResultSet rset) throws SQLException {
         readFrom(rset);
+        //Object Creation: This Constructor is called from RealEstatePhotoFactory#createPhoto()
+        //					So Instantiation Process is as follows: RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+        //					(Design) Patterns of Object Creation: "Abstract Factory" ( RealEstatePhotoFactory#createPhoto() {... return new RealEstatePhoto(..);}
+        //                  Base level (0): Here Object RealEstatePhoto is created by constructor (Step 3)
     }
 
     /**

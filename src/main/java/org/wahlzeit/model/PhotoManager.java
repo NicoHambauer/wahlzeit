@@ -135,6 +135,9 @@ public class PhotoManager extends ObjectManager {
 	 */
 	protected Photo createObject(ResultSet rset) throws SQLException {
 		return PhotoFactory.getInstance().createPhoto(rset);
+		//Object Creation: (Design) Patterns of Object Creation: "Abstract Factory"
+		//					So Instantiation Process is as follows: PhotoManager#createObject() --> RealEstatePhotoFactory#createPhoto() --> RealEstatePhoto#RealEstatePhoto()
+		//                  level (2): Here Factory Method is Called (Step1)
 	}
 	
 	/**
