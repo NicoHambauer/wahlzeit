@@ -24,9 +24,10 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class RealEstate {
-
-    HashSet<RealEstatePhoto> realEstatePhotos = new HashSet<>();
     RealEstateManager manager;
+
+    //Collaboration : RealEstatePhoto (Client) --- RealEstate (Service)
+    HashSet<RealEstatePhoto> realEstatePhotos = new HashSet<>();
 
     protected RealEstateType type = null;
 
@@ -46,12 +47,19 @@ public class RealEstate {
         return Objects.hash(this.type, this.realEstatePhotos);
     }
 
+    /**
+     * Collaboration : RealEstatePhoto (Client) --- RealEstate (Service)
+     */
     public HashSet<RealEstatePhoto> getRealEstatePhotos() {
         return realEstatePhotos;
     }
 
+    /**
+     * Collaboration : RealEstatePhoto (Client) --- RealEstate (Service)
+     *
+     */
     public void addRealEstatePhoto(RealEstatePhoto realEstatePhoto) {
-        this.realEstatePhotos = realEstatePhotos;
+        this.realEstatePhotos.add(realEstatePhoto);
     }
 
     public RealEstateType getType() {

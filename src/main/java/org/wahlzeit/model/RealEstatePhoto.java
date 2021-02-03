@@ -18,8 +18,10 @@ import java.sql.SQLException;
 )
 public class RealEstatePhoto extends Photo {
 
-    RealEstate building;
     RealEstatePhotoManager manager;
+
+    //Collaboration : RealEstatePhoto (Client) --- RealEstate (Service)
+    RealEstate building;
 
     protected int rooms = 5;
     protected int bathrooms = 2;
