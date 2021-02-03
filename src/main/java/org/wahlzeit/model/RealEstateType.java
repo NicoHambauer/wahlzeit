@@ -28,7 +28,6 @@ import java.util.Objects;
 public class RealEstateType {
 
     RealEstateManager manager;
-
     RealEstateType superType;
     HashSet<RealEstateType> subtypes = new HashSet<>();
 
@@ -56,6 +55,8 @@ public class RealEstateType {
     sub. sub.      ........
 
      */
+
+    //Collaboration : RealEstate (Base Object) --- RealEstateType (TypeObject)
 
     public RealEstateType(String typeName, RealEstateManager manager , RealEstateType superType, RealEstateType[] subtypes){
         assertNotNull(typeName);
@@ -107,6 +108,7 @@ public class RealEstateType {
         return subtypes.iterator();
     }
 
+    //Collaboration : RealEstate (Base Object) --- RealEstateType (TypeObject)
     public boolean hasInstance(RealEstate realEstate) {
         assertNotNull(realEstate);
         if (realEstate.getType() == this) {

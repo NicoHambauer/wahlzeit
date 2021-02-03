@@ -29,6 +29,7 @@ public class RealEstate {
     //Collaboration : RealEstatePhoto (Client) --- RealEstate (Service)
     HashSet<RealEstatePhoto> realEstatePhotos = new HashSet<>();
 
+    //Collaboration : RealEstate (Base Object) --- RealEstateType (TypeObject)
     protected RealEstateType type = null;
 
     public RealEstate(RealEstateType type, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
@@ -62,10 +63,18 @@ public class RealEstate {
         this.realEstatePhotos.add(realEstatePhoto);
     }
 
+    /**
+     * Collaboration : RealEstate (Base Object) --- RealEstateType (TypeObject)
+     * @return
+     */
     public RealEstateType getType() {
         return type;
     }
 
+    /**
+     * Collaboration : RealEstate (Base Object) --- RealEstateType (TypeObject)
+     * @param type
+     */
     public void setType(RealEstateType type) {
         this.type = type;
     }
