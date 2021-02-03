@@ -25,13 +25,24 @@ import java.util.HashSet;
 
 public class RealEstateManager {
 
+    //Collaboration : RealEstate (Element) --- RealEstateManager (Manager)
     HashMap<Integer, RealEstate> realEstateInstances = new HashMap<>();
+
     HashMap<Integer, RealEstateType> realEstateTypes = new HashMap<>();
 
     public RealEstateManager(){
         //default Constructor
     }
 
+    /**
+     * Collaboration : RealEstate (Element) --- RealEstateManager (Manager)
+     * @param typeName
+     * @param superType
+     * @param subtypes
+     * @param realEstatePhotos
+     * @param manager
+     * @return
+     */
     public RealEstate getOrCreateRealEstate(String typeName, RealEstateType superType, RealEstateType[] subtypes, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         assertClassInvariants();
         RealEstateType type = getOrCreateRealEstateType(typeName, superType, subtypes);
@@ -40,6 +51,13 @@ public class RealEstateManager {
         return newRealEstate;
     }
 
+    /**
+     * Collaboration : RealEstate (Element) --- RealEstateManager (Manager)
+     * @param typeName
+     * @param realEstatePhotos
+     * @param manager
+     * @return
+     */
     public RealEstate getOrCreateRealEstate(String typeName, HashSet<RealEstatePhoto> realEstatePhotos, RealEstateManager manager){
         //Object Creation: This method creates/builds RealEstates from "ground up"
         //					So Instantiation Process is as follows: RealEstateManager#getOrCreateRealEstate() --> RealEstateType#createInstance() --> RealEstate#RealEstate()

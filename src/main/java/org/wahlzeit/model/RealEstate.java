@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class RealEstate {
+
+    //Collaboration : RealEstate (Element) --- RealEstateManager (Manager)
     RealEstateManager manager;
 
     //Collaboration : RealEstatePhoto (Client) --- RealEstate (Service)
